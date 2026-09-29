@@ -1,0 +1,20 @@
+{
+  "name": "assetweave",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=24.21.0 <25"
+  },
+  "scripts": {
+    "build": "corepack pnpm -r build",
+    "typecheck": "corepack pnpm -r typecheck",
+    "test": "corepack pnpm --filter @assetweave/server test",
+    "start": "corepack pnpm --filter @assetweave/server start",
+    "pair": "corepack pnpm --filter @assetweave/server pair"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "typescript": "5.9.3"
+  }
+}
