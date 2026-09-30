@@ -168,7 +168,7 @@
   .shell-context { color: var(--subtle); white-space: nowrap; font-size: 11px; font-weight: 650; letter-spacing: .075em; text-transform: uppercase; }
   .shell-actions { display: flex; align-items: center; gap: 7px; margin-left: auto; flex: none; }
   .shell-actions button { white-space: nowrap; }
-  .menu-button, .drawer-heading { display: none; }
+  .shell-header .menu-button, .drawer-heading { display: none; }
   .shell-workspace { flex: 1; min-height: 0; min-width: 0; display: grid; grid-template-columns: 214px minmax(0, 1fr) 318px; }
   .shell-navigation { min-width: 0; padding: 18px 10px 24px; background: var(--chrome); border-right: 1px solid var(--line); overflow: auto; }
   .shell-content { min-width: 0; padding: 22px 28px 40px; background: var(--canvas); overflow: auto; overflow-wrap: anywhere; }
@@ -191,7 +191,7 @@
     .workbench-shell { min-height: 100dvh; }
     .shell-workspace { display: block; }
     .shell-content { overflow: visible; padding: 20px 22px 28px; }
-    .menu-button { display: grid; place-items: center; flex: none; }
+    .shell-header .menu-button { display: grid; place-items: center; flex: none; }
     .shell-navigation { position: fixed; z-index: 51; inset: 0 auto 0 0; width: min(280px, calc(100vw - 42px)); visibility: hidden; transform: translateX(-105%); transition: transform .18s ease; box-shadow: 6px 0 28px #0005; }
     .shell-navigation.drawer-open { visibility: visible; transform: translateX(0); }
     .drawer-backdrop { display: block; position: fixed; inset: 0; z-index: 50; border: 0; border-radius: 0; background: #101718af; }

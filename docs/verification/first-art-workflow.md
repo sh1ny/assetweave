@@ -111,6 +111,14 @@ Browser inspection is recorded below. The completed fresh-agent reconstruction a
 
 At the U9 checkpoint, review decisions, filmstrip comparison, Fit/1:1, and visual animation playback had not yet been exercised; see the later U10 observations below.
 
+### Desktop navigation menu correction — 2026-09-30
+
+The later shared button display rule overrode the scoped menu-hiding rule, leaving an ineffective menu visible on desktop. Increasing the specificity of both header-menu selectors corrected the cascade without changing drawer behavior or shared tokens.
+
+The same actual built-browser visibility check failed before the fix and passed afterward: at 1280px and 901px the menu was hidden and the sidebar visible; at 900px and 390px the menu was visible, clicking it opened the drawer and focused Close navigation, and Escape closed it and restored opener focus. Light and dark drawer screenshots were inspected. Resizing an open light-theme drawer to 901px closed it, reset its expanded state, and focused the sidebar. No horizontal page overflow was observed at 901px, 900px, or 390px, and no uncaught browser errors occurred.
+
+The production web build passed, typecheck reported zero errors or warnings, and all 16 existing web tests passed. Those helper tests do not cover rendered CSS; this regression was verified with a disposable actual browser probe rather than a new harness or source-text test. Diagnostic sessions were signed out and tabs closed.
+
 ## External OpenAI producer records
 
 A managed request preceded a real `generate_image` invocation using available catalog selector `openai-codex/gpt-image-2`. The tool reported actual model `gpt-image-2-codex` and returned a 1254×1254 WebP. Recorded parameters distinguish the requested 1024×1024 size from that reported output; seed and exact production time remain unknown. An earlier unavailable-selector attempt is separately retained as reported failed, explicitly before any producer invocation.
