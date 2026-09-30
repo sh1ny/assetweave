@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "typecheck": "svelte-check --tsconfig ./tsconfig.json"
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "tsc -p tsconfig.test.json && node --test \"build/test-browser/lib/*.test.js\""
   },
   "dependencies": {
+    "@assetweave/contracts": "workspace:*",
     "svelte": "5.57.1"
   },
   "devDependencies": {

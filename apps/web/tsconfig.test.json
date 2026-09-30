@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build/test-browser",
+    "types": ["node", "vite/client"],
+    "noEmit": false
+  },
+  "include": ["src/lib/**/*.ts"],
+  "exclude": ["build/test-browser", "node_modules"]
+}
