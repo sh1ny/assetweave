@@ -1,0 +1,21 @@
+{
+  "name": "@assetweave/integration",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test \"dist/*.test.js\""
+  },
+  "dependencies": {
+    "@assetweave/contracts": "workspace:*",
+    "@assetweave/mcp": "workspace:*",
+    "@assetweave/server": "workspace:*"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.2.0",
+    "@types/node": "24.10.1",
+    "typescript": "5.9.3"
+  }
+}

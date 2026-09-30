@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, rmdirSync, symlinkSync, writeFileSync } from 'node:fs';
 import { request as httpRequest } from 'node:http';
 import { join } from 'node:path';
 import { test, type TestContext } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { startServer, type RunningService } from '../src/main.js';
-import { resolveProfilePath, verifyWindowsProfile } from '../src/runtime/profile.service.js';
+import { ProfileService, resolveProfilePath, verifyWindowsProfile } from '../src/runtime/profile.service.js';
 
 const windowsOnly = process.platform !== 'win32';
 
@@ -106,6 +106,44 @@ test('a private profile has one live owner, an independently running listener, a
   assert.doesNotMatch(await missingMedia.text(), /Local browser connection/);
 });
 
+test('bridge discovery keeps the event loop responsive and rechecks the private profile on each read', { skip: windowsOnly }, async (t) => {
+  const fixture = profileFixture(t);
+  const service = await fixture.start();
+  const opened: string[] = [];
+  const opening = ProfileService.forBridgeDiscovery(fixture.profilePath).then(profile => {
+    opened.push('discovered');
+    return profile;
+  });
+  await new Promise<void>(resolve => setImmediate(() => { opened.push('timer'); resolve(); }));
+  assert.equal(opened[0], 'timer', 'initial ACL verification must not block the event loop');
+  const profile = await opening;
+
+  const readOrder: string[] = [];
+  const reading = profile.readBridge().then(discovery => {
+    readOrder.push('read');
+    return discovery;
+  });
+  await new Promise<void>(resolve => setImmediate(() => { readOrder.push('timer'); resolve(); }));
+  assert.equal(readOrder[0], 'timer', 'each read must verify asynchronously');
+  const discovery = await reading;
+  assert.equal(discovery.origin, service.origin);
+  assert.equal(discovery.instanceId, service.profile.instanceId);
+  assert.equal(discovery.bearer.length, 43);
+
+  const replaced = join(fixture.profilePath, 'unexpected-junction');
+  symlinkSync(fixture.webDist, replaced, 'junction');
+  try {
+    await assert.rejects(profile.readBridge(), /reparse point inside private profile/);
+  } finally {
+    rmdirSync(replaced);
+  }
+  assert.deepEqual(await profile.readBridge(), discovery);
+
+  const substituted = join(fixture.root, 'profile-junction');
+  symlinkSync(fixture.profilePath, substituted, 'junction');
+  await assert.rejects(ProfileService.forBridgeDiscovery(substituted), /reparse-point profile path/);
+});
+
 test('a single-use profile-bound code pairs a browser; origin, cookie, CSRF, and bearer transitions fail closed', { skip: windowsOnly }, async (t) => {
   const first = profileFixture(t);
   const service = await first.start();
@@ -183,11 +221,12 @@ test('restart rotates both authorization channels; hostile multipart is rejected
   assert.equal(hostile.status, 403);
   assert.deepEqual(readdirSync(join(profilePath, 'staging')), []);
   const noninteractive = spawnSync(process.execPath, [fileURLToPath(new URL('../src/main.js', import.meta.url)), 'pair'], {
-    env: { ...process.env, ASSETWEAVE_DATA_DIR: profilePath }, encoding: 'utf8', timeout: 10_000,
+    env: { ...process.env, ASSETWEAVE_DATA_DIR: profilePath }, encoding: 'utf8', timeout: 60_000,
   });
-  assert.notEqual(noninteractive.status, 0);
-  assert.match(noninteractive.stderr, /interactive terminal/);
-  assert.doesNotMatch(noninteractive.stdout, new RegExp(paired.capability));
+  assert.ifError(noninteractive.error);
+  assert.equal(noninteractive.signal, null);
+  assert.equal(noninteractive.status, 1, noninteractive.stderr);
+  assert.equal(noninteractive.stdout, '');
   await service.close();
   const restarted = await fixture.start();
   assert.equal((await fetch(`${restarted.origin}/api/session`, { headers: { Cookie: paired.cookie } })).status, 401);
@@ -233,6 +272,84 @@ test('the profile stays outside the checkout and registered or configured sync l
     else process.env.OneDriveConsumer = previous;
   }
   assert.deepEqual(readdirSync(configuredSyncRoot), []);
+});
+
+test('ordinary ancestor ownership is unsafe even when its explicit DACL is restricted', { skip: windowsOnly }, async (t) => {
+  const fixture = profileFixture(t);
+  const service = await fixture.start();
+  assert.equal((await fetch(service.origin)).status, 200, 'genuinely private profiles under Windows-owned ancestors still open');
+
+  const foreignParent = join(fixture.root, 'foreign-owned-parent');
+  mkdirSync(foreignParent);
+  const psLiteral = (value: string) => `'${value.replaceAll("'", "''")}'`;
+  const ownerAttempt = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', `
+$ErrorActionPreference = 'Stop'
+$path = ${psLiteral(foreignParent)}
+$current = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+$acl = Get-Acl -LiteralPath $path
+if ($acl.GetOwner([System.Security.Principal.SecurityIdentifier]).Value -ne $current) { throw 'Fixture owner is not the current user.' }
+$acl.SetOwner([System.Security.Principal.SecurityIdentifier]::new('S-1-5-32-545'))
+$failure = ''
+try { Set-Acl -LiteralPath $path -AclObject $acl } catch { $failure = $_.Exception.Message }
+$owner = (Get-Acl -LiteralPath $path).GetOwner([System.Security.Principal.SecurityIdentifier]).Value
+if ($owner -eq 'S-1-5-32-545') { exit 0 }
+if ($owner -ne $current) { throw "Unexpected owner after assignment attempt: $owner" }
+Write-Output "Owner reassignment unavailable: $failure"
+exit 50
+`], { encoding: 'utf8' });
+  assert.ifError(ownerAttempt.error);
+  assert.ok(ownerAttempt.status === 0 || ownerAttempt.status === 50, ownerAttempt.stderr);
+  if (ownerAttempt.status === 0) {
+    let unexpectedService: RunningService | undefined;
+    try {
+      await assert.rejects(async () => {
+        unexpectedService = await startServer({ profilePath: join(foreignParent, 'private'), webDist: fixture.webDist, port: 0 });
+      }, /ancestor is owned by another principal/);
+      assert.deepEqual(readdirSync(foreignParent), [], 'startup must refuse before creating a profile or database');
+    } finally {
+      await unexpectedService?.close();
+    }
+  } else {
+    t.diagnostic(ownerAttempt.stdout.trim());
+  }
+
+  // Unprivileged Windows tokens cannot normally set an arbitrary owner. Exercise the
+  // actual ancestor-owner policy on a restricted security descriptor in that case too.
+  const aclScript = fileURLToPath(new URL('../../scripts/profile-acl.ps1', import.meta.url));
+  const descriptorProbe = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', `
+$ErrorActionPreference = 'Stop'
+$tokens = $null
+$errors = $null
+if (-not (Test-Path -LiteralPath ${psLiteral(aclScript)} -PathType Leaf)) { throw 'Production ACL script is missing from the test runtime path.' }
+$ast = [System.Management.Automation.Language.Parser]::ParseFile(${psLiteral(aclScript)}, [ref]$tokens, [ref]$errors)
+if ($errors.Count -gt 0) { throw ('ACL policy script fails parsing: ' + (($errors | ForEach-Object { $_.Message }) -join '; ')) }
+$function = $ast.Find({ param($node) $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Assert-TrustedAncestorOwner' }, $true)
+if (-not $function) { throw 'ACL policy function is unavailable.' }
+$current = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+$trusted = @($current, 'S-1-5-18', 'S-1-5-32-544', 'S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464')
+$acl = [System.Security.AccessControl.DirectorySecurity]::new()
+$acl.SetAccessRuleProtection($true, $false)
+foreach ($sid in $trusted[0..2]) {
+    $acl.AddAccessRule([System.Security.AccessControl.FileSystemAccessRule]::new(
+        [System.Security.Principal.SecurityIdentifier]::new($sid),
+        [System.Security.AccessControl.FileSystemRights]::FullControl,
+        [System.Security.AccessControl.AccessControlType]::Allow))
+}
+$check = [scriptblock]::Create($function.Extent.Text + [Environment]::NewLine + 'Assert-TrustedAncestorOwner $acl ''synthetic ancestor'' $trusted')
+foreach ($sid in $trusted) {
+    $acl.SetOwner([System.Security.Principal.SecurityIdentifier]::new($sid))
+    & $check
+}
+$acl.SetOwner([System.Security.Principal.SecurityIdentifier]::new('S-1-5-21-111111111-222222222-333333333-1001'))
+$refused = $false
+try { & $check } catch {
+    if ($_.Exception.Message -notlike '*ancestor is owned by another principal*') { throw }
+    $refused = $true
+}
+if (-not $refused) { throw 'Restricted DACL concealed unsafe foreign owner.' }
+`], { encoding: 'utf8' });
+  assert.ifError(descriptorProbe.error);
+  assert.equal(descriptorProbe.status, 0, descriptorProbe.stderr || descriptorProbe.stdout);
 });
 
 test('an insecure custom profile and substituted junctions refuse startup before any database can open', { skip: windowsOnly }, async (t) => {

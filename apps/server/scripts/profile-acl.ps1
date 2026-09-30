@@ -43,6 +43,15 @@ $current = [System.Security.Principal.WindowsIdentity]::GetCurrent().User
 $system = [System.Security.Principal.SecurityIdentifier]::new('S-1-5-18')
 $admins = [System.Security.Principal.SecurityIdentifier]::new('S-1-5-32-544')
 $allowed = @($current.Value, $system.Value, $admins.Value)
+# An owner can change a DACL even without an explicit WRITE_DAC allow ACE.
+# TrustedInstaller owns ordinary Windows volume roots; it is not an ACE exception.
+$trustedAncestorOwners = $allowed + @('S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464')
+function Assert-TrustedAncestorOwner([System.Security.AccessControl.DirectorySecurity]$acl, [string]$path, [string[]]$trustedOwners) {
+    $owner = $acl.GetOwner([System.Security.Principal.SecurityIdentifier]).Value
+    if ($trustedOwners -notcontains $owner) {
+        throw "An ancestor is owned by another principal and can replace the private profile path: $path ($owner)"
+    }
+}
 # Creating a sibling does not grant deletion of an existing protected child.
 # DELETE on an existing ancestor or DELETE_CHILD on its parent does; so do
 # WRITE_DAC/WRITE_OWNER rights that can grant the attacker those permissions.
@@ -59,6 +68,7 @@ while ($ancestor) {
         }
         if ($ancestor -ne $profile) {
             $parentAcl = Get-Acl -LiteralPath $ancestor
+            Assert-TrustedAncestorOwner $parentAcl $ancestor $trustedAncestorOwners
             foreach ($rule in $parentAcl.GetAccessRules($true, $true, [System.Security.Principal.SecurityIdentifier])) {
                 if ($rule.AccessControlType -ne [System.Security.AccessControl.AccessControlType]::Allow -or
                     ($rule.PropagationFlags -band [System.Security.AccessControl.PropagationFlags]::InheritOnly) -ne 0) { continue }

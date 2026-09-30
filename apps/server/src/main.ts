@@ -3,11 +3,13 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createInterface } from 'node:readline/promises';
+import fastifyMultipart from '@fastify/multipart';
 import fastifyStatic from '@fastify/static';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import type { FastifyInstance } from 'fastify';
 import { AppModule } from './app.module.js';
+import { ApiErrorFilter } from './runtime/api-error.filter.js';
 import { installLocalAccess } from './runtime/local-access.plugin.js';
 import { LocalAccessService } from './runtime/local-access.service.js';
 import { ProfileService } from './runtime/profile.service.js';
@@ -42,9 +44,11 @@ export async function startServer(options: StartOptions = {}): Promise<RunningSe
       new FastifyAdapter({ trustProxy: false, logger: false, bodyLimit: 1024 * 1024 }),
       { logger: ['error', 'warn'] },
     );
+    app.useGlobalFilters(new ApiErrorFilter());
     const fastify: FastifyInstance = app.getHttpAdapter().getInstance();
     const access = app.get(LocalAccessService);
     installLocalAccess(fastify, access);
+    fastify.register(fastifyMultipart, { attachFieldsToBody: false, throwFileSizeLimit: false });
     fastify.register(fastifyStatic, {
       root: join(webDist, 'assets'),
       prefix: '/assets/',
@@ -88,7 +92,7 @@ async function pairFromLauncher(): Promise<void> {
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
     throw new Error('Pairing codes are shown only in an interactive terminal. Run `corepack pnpm pair` in your own terminal.');
   }
-  const profile = ProfileService.forLauncher();
+  const profile = ProfileService.forDiscovery();
   const launcher = profile.readLauncher();
   if (!launcher.launcherToken || !/^http:\/\/127\.0\.0\.1:\d{1,5}$/.test(launcher.origin)) {
     throw new Error('Launcher discovery is invalid. Start the local service for the selected profile.');

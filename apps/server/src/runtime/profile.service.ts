@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import {
   closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync,
@@ -7,6 +7,7 @@ import {
 } from 'node:fs';
 import { isAbsolute, join, parse, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
 
 interface OwnerRecord { pid: number; instanceId: string }
 interface DiscoveryRecord extends OwnerRecord {
@@ -17,11 +18,34 @@ interface DiscoveryRecord extends OwnerRecord {
   launcherToken?: string;
 }
 
+export interface BridgeDiscovery {
+  origin: string;
+  bearer: string;
+  instanceId: string;
+}
+
 const serverPackageRoot = fileURLToPath(new URL('../../../', import.meta.url));
 const sourceRoot = realpathSync.native(resolve(serverPackageRoot, '../..'));
 const aclScript = join(serverPackageRoot, 'scripts', 'profile-acl.ps1');
 const lockName = 'owner.lock';
 const recoveryName = '.owner-recovery';
+const execFileAsync = promisify(execFile);
+const aclOptions = {
+  windowsHide: true,
+  encoding: 'utf8' as const,
+  stdio: ['ignore', 'pipe', 'pipe'] as ['ignore', 'pipe', 'pipe'],
+  maxBuffer: 256 * 1024,
+};
+function profileCheckArgs(path: string, action: 'create' | 'verify'): string[] {
+  if (process.platform !== 'win32') {
+    throw new Error('Private profile ACL verification requires Windows; refusing to start without a supported local security boundary.');
+  }
+  return ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', aclScript, '-Action', action, '-ProfilePath', path];
+}
+function profileCheckFailure(error: unknown): Error {
+  const failure = error as Error & { stderr?: string };
+  return new Error(`Private profile security check failed: ${failure.stderr?.trim() || failure.message}`);
+}
 
 export function resolveProfilePath(customPath = process.env.ASSETWEAVE_DATA_DIR): string {
   const chosen = customPath || (process.env.LOCALAPPDATA && join(process.env.LOCALAPPDATA, 'AssetWeave'));
@@ -36,19 +60,20 @@ export function resolveProfilePath(customPath = process.env.ASSETWEAVE_DATA_DIR)
 }
 
 export function verifyWindowsProfile(path: string, action: 'create' | 'verify'): void {
-  if (process.platform !== 'win32') {
-    throw new Error('Private profile ACL verification requires Windows; refusing to start without a supported local security boundary.');
-  }
+  const args = profileCheckArgs(path, action);
   try {
-    execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', aclScript, '-Action', action, '-ProfilePath', path], {
-      windowsHide: true,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-      maxBuffer: 256 * 1024,
-    });
+    execFileSync('powershell.exe', args, aclOptions);
   } catch (error) {
-    const failure = error as Error & { stderr?: string };
-    throw new Error(`Private profile security check failed: ${failure.stderr?.trim() || failure.message}`);
+    throw profileCheckFailure(error);
+  }
+}
+
+export async function verifyWindowsProfileAsync(path: string, action: 'create' | 'verify'): Promise<void> {
+  const args = profileCheckArgs(path, action);
+  try {
+    await execFileAsync('powershell.exe', args, aclOptions);
+  } catch (error) {
+    throw profileCheckFailure(error);
   }
 }
 
@@ -122,6 +147,9 @@ export class ProfileService {
   verify(): void {
     verifyWindowsProfile(this.path, 'verify');
   }
+  verifyAsync(): Promise<void> {
+    return verifyWindowsProfileAsync(this.path, 'verify');
+  }
 
   private acquire(): void {
     const lock = join(this.path, lockName);
@@ -190,19 +218,46 @@ export class ProfileService {
     this.writePrivate('launcher.json', { ...common, launcherToken });
   }
 
-  readLauncher(): DiscoveryRecord {
-    this.verify();
-    const raw: unknown = JSON.parse(readFileSync(join(this.path, 'launcher.json'), 'utf8'));
-    if (!raw || typeof raw !== 'object' || !('profile' in raw) || !('origin' in raw) || !('launcherToken' in raw) ||
-        raw.profile !== this.path || typeof raw.origin !== 'string' || typeof raw.launcherToken !== 'string') {
-      throw new Error('Launcher discovery is missing, invalid, or belongs to another profile. Start the service for this profile first.');
+  private readDiscoveryRecord(name: 'launcher.json' | 'bridge.json'): DiscoveryRecord {
+    const raw: unknown = JSON.parse(readFileSync(join(this.path, name), 'utf8'));
+    const record = raw as Partial<DiscoveryRecord> | null;
+    const owner = readOwner(join(this.path, lockName));
+    if (!record || record.version !== 1 || record.profile !== this.path ||
+        typeof record.origin !== 'string' || !/^http:\/\/127\.0\.0\.1:[1-9]\d{0,4}$/.test(record.origin) ||
+        Number(new URL(record.origin).port) > 65535 ||
+        record.pid !== owner.pid || record.instanceId !== owner.instanceId ||
+        !isProcessPresent(owner.pid)) {
+      throw new Error('Discovery is invalid or belongs to a stopped or different profile service.');
     }
-    return raw as DiscoveryRecord;
+    return record as DiscoveryRecord;
   }
 
-  static forLauncher(customPath?: string): ProfileService {
+  readLauncher(): { origin: string; launcherToken: string } {
+    this.verify();
+    const record = this.readDiscoveryRecord('launcher.json');
+    if (!record.launcherToken || !/^[\w-]{43}$/.test(record.launcherToken)) {
+      throw new Error('Launcher discovery is invalid. Start the service for the selected profile first.');
+    }
+    return { origin: record.origin, launcherToken: record.launcherToken };
+  }
+
+  async readBridge(): Promise<BridgeDiscovery> {
+    await this.verifyAsync();
+    const record = this.readDiscoveryRecord('bridge.json');
+    if (!record.bearer || !/^[\w-]{43}$/.test(record.bearer)) {
+      throw new Error('Bridge discovery is invalid. Start the service for the selected profile first.');
+    }
+    return { origin: record.origin, bearer: record.bearer, instanceId: record.instanceId };
+  }
+
+  static forDiscovery(customPath?: string): ProfileService {
     const candidate = resolveProfilePath(customPath);
     verifyWindowsProfile(candidate, 'verify');
+    return new ProfileService(realpathSync.native(candidate));
+  }
+  static async forBridgeDiscovery(customPath?: string): Promise<ProfileService> {
+    const candidate = resolveProfilePath(customPath);
+    await verifyWindowsProfileAsync(candidate, 'verify');
     return new ProfileService(realpathSync.native(candidate));
   }
 

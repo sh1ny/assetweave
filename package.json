@@ -9,7 +9,7 @@
   "scripts": {
     "build": "corepack pnpm -r build",
     "typecheck": "corepack pnpm -r typecheck",
-    "test": "corepack pnpm --filter @assetweave/server test",
+    "test": "corepack pnpm -r --filter @assetweave/server --filter @assetweave/mcp --filter @assetweave/web --filter @assetweave/integration test",
     "start": "corepack pnpm --filter @assetweave/server start",
     "pair": "corepack pnpm --filter @assetweave/server pair"
   },
