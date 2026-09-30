@@ -1,0 +1,49 @@
+{
+  "name": "@assetweave/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/errors.js",
+  "types": "./dist/errors.d.ts",
+  "exports": {
+    "./errors": {
+      "types": "./dist/errors.d.ts",
+      "default": "./dist/errors.js"
+    },
+    "./catalog": {
+      "types": "./dist/catalog.d.ts",
+      "default": "./dist/catalog.js"
+    },
+    "./production": {
+      "types": "./dist/production.d.ts",
+      "default": "./dist/production.js"
+    },
+    "./capture": {
+      "types": "./dist/capture.d.ts",
+      "default": "./dist/capture.js"
+    },
+    "./media": {
+      "types": "./dist/media.d.ts",
+      "default": "./dist/media.js"
+    },
+    "./playback": {
+      "types": "./dist/playback.d.ts",
+      "default": "./dist/playback.js"
+    },
+    "./decisions": {
+      "types": "./dist/decisions.d.ts",
+      "default": "./dist/decisions.js"
+    },
+    "./queries": {
+      "types": "./dist/queries.d.ts",
+      "default": "./dist/queries.js"
+    }
+  },
+  "dependencies": {
+    "zod": "4.6.5"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}

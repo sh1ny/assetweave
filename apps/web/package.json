@@ -1,0 +1,20 @@
+{
+  "name": "@assetweave/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "tsc -p tsconfig.test.json && node --test \"build/test-browser/lib/*.test.js\""
+  },
+  "dependencies": {
+    "@assetweave/contracts": "workspace:*",
+    "svelte": "5.57.1"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "svelte-check": "4.3.3",
+    "vite": "8.3.1"
+  }
+}

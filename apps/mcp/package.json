@@ -1,0 +1,24 @@
+{
+  "name": "@assetweave/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "assetweave-mcp": "./dist/src/main.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test \"dist/test/*.test.js\"",
+    "start": "node dist/src/main.js"
+  },
+  "dependencies": {
+    "@assetweave/contracts": "workspace:*",
+    "@assetweave/server": "workspace:*",
+    "@modelcontextprotocol/server": "2.2.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.2.0"
+  }
+}
