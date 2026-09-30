@@ -6,7 +6,6 @@ topic: first-complete-art-workflow
 artifact_contract: ce-unified-plan/v1
 product_contract_source: ce-brainstorm
 execution: code
-deepened: 2026-09-29
 ---
 
 # AssetWeave First Complete Art Workflow - Plan
@@ -16,9 +15,9 @@ deepened: 2026-09-29
 - **Objective:** A developer and a fresh agent can return to a game-art asset, recover how its artwork came to exist, and continue work without reconstructing history from memory, old chats, or unrelated folders.
 - **Product authority:** `STRATEGY.md` remains authoritative and unchanged. This Product Contract defines the first complete workflow within its four tracks.
 - **Means:** NestJS/Fastify local service, Svelte browser UI, SQLite records, immutable content, and an MCP stdio bridge (KTD1–KTD4).
-- **Execution:** Implement the complete workflow through U1–U11; the implementing agent owns code, documentation, and runtime proof. The developer supplies creative decisions and participates in the founder exercise.
-- **Stop conditions:** Do not substitute a mocked producer for AE17, silently change the Product Contract, or report completion without the Verification Contract. Missing external credentials block the producer demonstration, not local implementation.
-- **Open blockers:** None for implementation. Authorized OpenAI access and founder participation remain prerequisites for final acceptance.
+- **Execution:** Complete U1–U11 against the existing checkout, preserving the runtime and partial catalog implementation. The implementing agent owns code, documentation, and runtime proof; the developer supplies creative decisions and participates in final acceptance.
+- **Stop conditions:** Do not substitute a mocked producer for AE17, silently change the Product Contract, or report completion without the required acceptance evidence. Missing external credentials block the producer demonstration, not local implementation.
+- **Acceptance prerequisites:** Authorized OpenAI access and founder participation remain necessary for final acceptance, not for local implementation.
 
 ---
 
@@ -64,6 +63,8 @@ Each entry records why a choice was made; its governed requirements own the beha
 - **Selected clips follow corrections.** Governs R40. A selection continues to identify the named clip while earlier decisions and production inputs keep their historical meaning. (session-settled: user-directed — chosen over keeping the selection pinned until reselection: ordinary playback uses the corrected clip description.)
 - **Core filters plus full-text search.** Governs R22, R23. Producer-specific information remains accessible without requiring a general parameter-query system. (session-settled: user-directed — chosen over arbitrary parameter filtering: prioritize the common retrieval workflow.)
 - **OpenAI is the first producer exercised.** Governs R45. It supplies a concrete interoperability check, not the domain model. (session-settled: user-directed — chosen over PixelLab and ComfyUI for the first round trip: ground initial coverage in the founder's selected workflow.)
+- **Compact Designer visual baseline.** Governs R47. The rendered revision is accepted as a starting point for implementation, not a permanent design freeze. (session-settled: user-approved — chosen over the earlier heavier treatment and spacious-gallery alternative: retain information density with quieter visual structure; later revision and improvement are allowed.)
+- **Workbench browsing with artwork-first review.** Governs R48. The combined arrangement keeps project context available while making opened artwork the main focus. (session-settled: user-approved — chosen over the table-first arrangement and a grid-only workbench after reviewing the combined prototype.)
 
 ### Actors
 
@@ -132,6 +133,11 @@ Each entry records why a choice was made; its governed requirements own the beha
 - R45. The first complete workflow must exercise an actual agent-to-OpenAI-image-generation-to-capture round trip without making OpenAI availability or credentials a condition of using the local application.
 - R46. Artifact identity, decisions, and lineage must remain independent of the initial image encodings, allowing later native Krita/Aseprite support to join the same history model without requiring native decoding or editing in this slice.
 
+**Approved browser design baseline**
+
+- R47. The main artwork interface must use the approved Designer revision as its current visual baseline: compact information density, quiet neutral surfaces, fewer decorative boxes and borders, clear typography, and restrained interaction accents, while retaining legible text, visible controls and focus, and distinct textual cues for review, viewing, and slot selection. The preserved prototype supplies the visual reference, not production data or shipped code. Approval permits later refinement; it does not freeze pixel values or choose a preferred default between the existing dark and light treatments.
+- R48. On desktop, the main artwork workbench must retain project/asset/slot navigation on the left and a contextual record inspector on the right. Slot browsing presents a central candidate grid; opening an individual artwork replaces that grid with a large viewer and an alternatives filmstrip without changing the slot's selection or review decisions. Returning to candidates restores the same slot and filters. On narrow screens, navigation and record details remain accessible through the prototype's drawer and disclosure arrangement rather than forcing three columns.
+
 ### Key Flows
 
 - F1. **Request, produce, capture, review.** Covers R3–R11, R16–R19, R28–R34, R41, R42, R45.
@@ -144,7 +150,7 @@ Each entry records why a choice was made; its governed requirements own the beha
   - **Steps:** Establish the project and logical asset, capture the content, attach available facts and explicit input relationships, and optionally assign slots. Leave missing history unknown.
   - **Outcome:** The artwork enters the same review and lineage workflow as an output of F1, without a fabricated session history.
 
-- F3. **Review images and animations.** Covers R14, R16–R27, R38–R40.
+- F3. **Review images and animations.** Covers R14, R16–R27, R38–R40, R47–R48.
   - **Trigger:** The developer finds candidates through browsing, filtering, search, or an agent's presentation.
   - **Steps:** Inspect the image or play the relevant animation, consult supplemental facts and provenance as needed, and compare available candidates. Configure missing regular-grid playback information when known. Record a review decision, selection, or deliberate absence of selection.
   - **Outcome:** The human's decisions are recorded for the particular purpose and target without being inferred from viewing behavior.
@@ -274,6 +280,11 @@ flowchart TB
   - **When:** Registration is attempted.
   - **Then:** AssetWeave does not report that artifact as successfully captured. An existing request remains recoverable with the reported problem or unknown outcome instead of a fabricated complete artifact.
 
+- AE19. **Browsing and artwork review preserve context.** Covers R16, R18, R20–R21, R47–R48.
+  - **Given:** Knight / Attack has A006 selected and A004 as an approved alternative, and the developer has applied a review-status filter to its candidate grid.
+  - **When:** The developer opens A004, inspects its facts, inputs, and history, then returns to candidates.
+  - **Then:** The large viewer and alternatives are available alongside the record context on desktop; returning restores the slot and filter. A006 remains selected, no review decision is recorded by viewing, and the same navigation and record information remain accessible on narrow screens. The interface follows the approved compact visual baseline rather than treating the prototype's fictional records as catalog data.
+
 ### Success Criteria
 
 Evaluation uses local project records and manual founder-workflow exercises, following `STRATEGY.md` under Key metrics.
@@ -287,7 +298,7 @@ The acceptance examples are the required behavior checks; the measures below ass
 | Workflow continuity | Complete F1 and F2, then revisit through F4 after restarting and discarding conversational context. | Captured content, decisions, requests, and lineage remain sufficient to continue from recorded facts under R5–R11 and R28–R40. |
 | Local independence | Repeat local retrieval and review without an available generator or hosted account. | The local behaviors in R2 remain usable; the optional external producer is needed only for its own production step. |
 
-All conditional outcomes in AE1–AE18 must hold.
+All conditional outcomes in AE1–AE19 must hold.
 The successful first demonstration includes real externally generated artwork, an after-the-fact human image import, playable spritesheet clips, alternative decisions, a multi-input branch, a changed selection with older descendants, and an explicit unknown in the recovered history.
 
 ### Scope Boundaries
@@ -310,7 +321,7 @@ The successful first demonstration includes real externally generated artwork, a
 - A job runner, scheduling system, retry orchestration, or ownership of external generator sessions; R9–R10 concern records of work, not execution management.
 - Automatic reconstruction of unrecorded past conversations or production history; R31 and R36 govern gaps.
 - Automatic artistic assessments, regeneration demands, or publication status; R12, R18, and R37 govern the relevant distinctions.
-- A prescribed screen layout, database schema, endpoint or MCP tool vocabulary, storage hierarchy, ORM, or frontend component architecture.
+- Screen layouts beyond the approved browse/review baseline in R47–R48, or a prescribed database schema, endpoint or MCP tool vocabulary, storage hierarchy, ORM, or frontend component architecture.
 
 ### Dependencies and Assumptions
 
@@ -324,115 +335,105 @@ The successful first demonstration includes real externally generated artwork, a
 
 **Resolve Before Planning:** None.
 
-**Resolved in the Planning Contract:** Application startup, backend/frontend composition, persistence, content storage, search, MCP operations, and playback rendering.
-NestJS is a required backend choice; KTD1 records the user direction.
-The remaining technical choices implement R1–R46 without replacing their authority.
+**Resolved through the prototype:** The main browse/review arrangement and the Designer's compact, minimal visual revision are accepted as the current baseline. Later improvements remain allowed; no preferred default theme was specified.
+
+**Implementation planning:** The Planning Contract and U1–U11 cover R1–R48 and AE1–AE19 against the existing checkout. NestJS remains required; completed work and partial implementation are inputs to extend, not discard.
 
 ### Sources
 
 - `STRATEGY.md`, especially Boundaries, Key metrics, and Tracks: authoritative product constraints and evaluation framework.
 - Founder workflow evidence: both the developer and the agent failed to remember how an existing artwork result had reached its current form.
+- User-reviewed visual prototype: `.context/compound-engineering/ce-prototype/2026-09-29-artwork-visual-style/01-visual-treatment/screens/`; approval and browser evidence in the run's `decisions.md`. These are ignored local design references, not tracked production assets. R47–R48 and AE19 preserve the governing decisions without requiring access to that local directory.
+- The user's approval after reviewing the native Designer revision: “Let's go with that for the time being, we can always revise and improve.”
 
 ---
 
 ## Planning Contract
 
-**Product Contract preservation:** Clarified R40 and AE14 with the user-confirmed selected-clip correction behavior; added its Key Decision. R1–R39, R41–R46, the other acceptance examples, and the original scope boundaries are unchanged. Summary and planning-question text now reflect the chosen implementation.
+**Product Contract preservation:** Product Contract unchanged in scope, requirements, decisions, flows, and acceptance examples; its implementation-planning pointer now refers to the sections below.
 
 ### Repository Baseline
 
-Only `STRATEGY.md` and this plan exist in the workspace.
-There is no application, manifest, test suite, migration history, Git repository, `CONCEPTS.md`, or institutional-learning corpus to extend.
-Every implementation path below is a proposed addition, not an existing pattern.
-Git setup is separate from application correctness; do not create a remote, publish artwork, or change the user's global Git identity as part of this work.
+Extend the checkout rather than repeat workspace setup.
+The previous plan at commit `05452b2` supplies the retained KTD1–KTD12 and U1–U11 identities and technical choices; current source, not that historical greenfield description, determines remaining work.
+
+| Surface | Existing evidence | Remaining work |
+| --- | --- | --- |
+| Runtime | `apps/server/src/main.ts`, `apps/server/src/runtime/`, `apps/server/test/runtime.test.ts` | Preserve the loopback, pairing, profile ownership, and early authorization boundary as domain routes are added. |
+| Persistence | `apps/server/src/database/database.service.ts`, `apps/server/src/database/migrations/001-domain.sql` | Complete and verify the partial schema, transactional history, migration upgrades, and multi-record operations. |
+| Catalog | `apps/server/src/catalog/`, `packages/contracts/src/catalog.ts` | Preserve project/asset/slot CRUD, revision checks, normalized slot names, and candidate placement; add behavioral coverage and bounded retrieval. |
+| Browser | `apps/web/src/App.svelte` | Retain pairing/connection access; add the actual artwork workbench and all domain forms. |
+| Workflow | Schema tables and `apps/server/test/helpers/store-fixture.ts` | Implement requests, capture, media, corrections, decisions, search, and context. Fixture insertion is not production capture. |
+| Agent interface | Bridge credentials in the runtime | Add `apps/mcp`; no stdio bridge or SDK dependency exists yet. |
+| Verification | `docs/verification/first-art-workflow.md` | Historical U1 evidence only. Its claim that artwork design is unapproved is superseded by R47–R48; update it without presenting prototype checks as production acceptance. |
+
+The runtime record reports a prior Windows build, typecheck, six runtime tests, and browser pairing smoke.
+The approved prototype decision record describes U1 as verified and U2 as partial/unverified.
+Neither statement establishes that the current partial domain code passes; this planning run performs no builds, tests, runtime probes, or generation.
+
+The current domain migration has two concrete constraint gaps to resolve in U2:
+- Several revision tables make `audit_event_id` unique, preventing multiple facts or input edges from sharing one capture event.
+- `slot_selections` references `candidates(id, clip_id)` without a matching unique parent key.
+
+The mutation service also rejects nested transactions.
+U3–U6 therefore need transaction-scoped writes that a capture or compound decision can compose, rather than services recursively calling `DatabaseService.mutate`.
 
 ### Key Technical Decisions
 
-- KTD1. **NestJS owns application behavior.** Use TypeScript and pnpm workspaces with `apps/server`, `apps/web`, `apps/mcp`, and `packages/contracts`. Nest modules contain injectable application services, thin controllers, and explicit SQLite repositories; neither Svelte nor MCP implements domain rules. Use NestJS with `FastifyAdapter`, not an Express backend or a plain Fastify application. Supports R3–R4. (session-settled: user-directed — chosen over plain Fastify: retain the requested NestJS backend.)
+- KTD1. **NestJS owns application behavior.** Keep TypeScript/pnpm workspaces, injectable Nest application services, thin controllers, explicit SQLite repositories, and shared Zod contracts. Svelte and MCP adapt the same domain operations; neither implements a second rules engine. Use `FastifyAdapter`, not plain Fastify or Express. Supports R3–R4. (session-settled: user-directed — chosen over plain Fastify: retain the requested NestJS backend.)
 
-- KTD2. **One local service, independently started.** The built Nest process serves the static Svelte application, JSON API, and authenticated media on one loopback origin. The MCP host starts only the stdio bridge, which connects to that service. Closing a browser or bridge does not stop Nest; an unavailable service produces an actionable error, never a second database owner or an empty catalog. Use a configurable app-owned data directory outside the source tree, defaulting to the current user's local application-data directory. Hold an exclusive ownership lock for its canonical path before migrations; refuse another live owner. A stale lock may be reclaimed only after the recorded process is confirmed absent. Keep startup and shutdown explicit; no autostart installer or service manager. Supports R2, R4. (session-settled: user-approved — chosen over a desktop installer and independently writing MCP processes: launch from the project and keep one persistence owner.)
+- KTD2. **One independently started local owner.** The existing Nest process serves the built Svelte SPA, API, and authenticated media on one loopback origin. The MCP host starts only a bridge; unavailable service means an actionable error, not another database or empty catalog. Preserve explicit startup/shutdown, canonical private profile discovery, exclusive live ownership, and confirmed-dead-owner recovery. No installer/autostart service is added. Supports R2, R4. (session-settled: user-approved — chosen over a desktop installer and independently writing MCP processes: launch from the project and keep one persistence owner.)
 
-- KTD3. **SQLite current records with retained revisions, not full event sourcing.** Use parameterized SQL through Node's built-in SQLite binding, versioned SQL migrations, foreign keys, WAL, and FULL synchronous commits. The initial migration defines the complete relational identity/constraint model, including artifacts, requests, playback revisions, candidates, and decision history, before their services are implemented. One Nest-owned connection performs short transactions; streaming and media decoding occur outside them.
+- KTD3. **Current relational records plus retained revisions.** Keep `node:sqlite`, parameterized SQL, foreign keys, WAL, FULL synchronous commits, and the existing mutation watermark. One short synchronous transaction owns expected-version checks, authority, audit, current records, revision rows, and search projections. Streaming and decoding stay outside it. One event may own multiple affected revision rows; compound writes receive its transaction context rather than nesting mutations. Protect retained revisions from update/delete while allowing current pointers to advance. Use forward migrations over existing version-1 data, never a destructive reset or a rewritten applied migration. Supports R9–R10, R31, R38–R40.
 
-  Each mutation appends history, updates current records, and advances one database-wide mutation watermark atomically.
-  Once U7 introduces search, its projections join the same transaction.
-  History stores actor, time, target, prior/new values, and supplied authority/rationale as applicable.
-  Expected-version checks prevent last-writer-wins between UI and MCP.
-  No ORM or event-replay framework is needed.
-  Supports R9–R10, R31, R38–R40.
+- KTD4. **Publish complete content before its database receipt.** Preserve the chosen per-capture immutable directory, ordered manifest, byte counts, and SHA-256 hashes. Stream to sibling staging, validate all represented members, flush files and a canonical recovery descriptor, close handles, publish to a fresh server-generated directory, then commit the artifact and all associations. Return success only after commit. An atomic in-flight operation claim and unique receipt prevent duplicate registration. Matching explicit resubmission returns the same artifact; changed complete bytes or context conflict. Equal bytes from distinct operations remain distinct artifacts. No external hard links, deduplication, overwrite, or remote-URL fetch. Supports R24, R28–R29, R41–R44. (session-settled: user-approved — chosen over storing artwork bytes in SQLite: keep metadata and immutable artwork files separate, with explicit crash reconciliation.)
 
-- KTD4. **Publish complete content before committing its artifact record.** Store each capture in its own immutable, server-named directory with an ordered manifest, byte counts, and SHA-256 hashes. Stream into a sibling staging directory, finish and flush files, close handles, publish by same-volume rename to a fresh destination, then commit artifact metadata and associations. Success is returned only after the database commit. A client capture-operation ID permits retrieval or explicit resubmission of the same capture after a lost response; reusing it with different content or context is a conflict. Equal bytes from distinct captures remain distinct artifacts. No hard links to external originals, automatic deduplication, overwrite, or remote-URL fetching. Supports R24, R28–R29, R41–R44. (session-settled: user-approved — chosen over storing artwork bytes in SQLite: keep metadata and immutable artwork files separate, with explicit crash reconciliation.)
+  The descriptor binds operation identity, project/asset, optional request and placement, supplied facts, actual inputs, and the complete ordered member manifest.
+  An explicit orphan resubmission must match it and revalidate references/cycles inside the registration transaction.
+  In-flight duplicates expose an in-progress result and receipt lookup; they cannot replace an active transfer.
+  Incomplete received bytes have no complete fingerprint and cannot be claimed as preserved.
+  Startup reports incomplete staging, published orphans, and registered-but-unavailable content without auto-registering or deleting them.
+  The private single owner reserves publication destinations; collisions fail without overwriting any directory.
+  File flush and Windows rename do not create a hardware power-loss transaction across SQLite and the filesystem.
 
-  Capture identity is protected by an atomic in-flight claim and a unique committed operation receipt.
-  Before publication, flush a canonical recovery descriptor containing the operation ID, original context, facts, actual inputs, placement, and complete member manifest.
-  Explicit orphan resubmission must match that descriptor and revalidate references/cycles in the registration transaction.
-  Concurrent matching submissions resolve to one receipt; different completed fingerprints conflict.
-  Bytes not received before an interruption have no known fingerprint and must not be claimed as compared or preserved.
+- KTD5. **Sourced assertions, not inferred provenance.** Preserve known-with-value, explicitly unknown, positively absent, and not-recorded states. Claim source differs from recording actor; capture time differs from production time. Retain nested producer metadata and index its textual leaves. Corrections append claim/input revisions and switch effective pointers. Supports R30–R34, R39, R44.
 
-- KTD5. **Facts carry assertion state and source.** A supplied provenance fact is known-with-value, explicitly unknown, or positively absent; an omitted fact has no assertion and is displayed as not recorded. Record claim source separately from the recording actor. Preserve nested producer metadata without requiring provider-specific columns; index its textual leaves for search. System-observed capture time never substitutes for production time. Corrections create revisions of claims and actual-input relationships while current queries use the effective revision. The database does not infer truth from the recorder's identity. Supports R30–R34, R39, R44.
+- KTD6. **Separate intention, derivation, and outcomes.** Requests retain immutable intent and proposed exact inputs. Outcome reports are separate revisions; no report means unknown, and capture does not overwrite a reported failure/cancellation. Actual inputs identify exact artifacts and known playback revisions, with nullable roles. Reject effective self-links/cycles without requiring chronological capture order. Gaps describe unavailable history rather than creating fictional source artifacts. Supports R9–R10, R32–R37, R42–R43.
 
-- KTD6. **Separate requests, actual derivation, and creative decisions.** Requests contain immutable intent/proposed-input snapshots and separately reported outcomes. Capture may reference a request but does not imply that the external request succeeded. Actual-input edges reference exact artifact IDs and, for clip inputs, playback revision IDs; input role remains nullable when unspecified. Reject self-links and cycles in the effective derivation graph, but do not require chronological capture order. Unknown or unavailable upstream history is a gap assertion, not a fabricated artifact or edge. Supports R9–R10, R32–R37, R42–R43.
+- KTD7. **Stable clips with immutable playback revisions.** Candidates identify a whole artifact or stable clip in a slot. Current selected playback resolves that clip's current revision; historical decisions and actual-input edges resolve their pinned revisions. Corrections change neither review state nor selected candidate identity. Clip-targeted decisions submit the observed playback revision and conflict if it changed before commit. Unknown production playback revision becomes a known artifact input plus an explicit playback gap, never “latest.” Supports R14, R25, R38–R40, R46. (session-settled: user-directed — chosen over pinning current selection until reselection: implement the R40 distinction between current selected playback and historical referents.)
 
-- KTD7. **Stable clip identity, immutable playback revisions.** A named clip belongs to one immutable artifact and has an ordered sequence of playback-description revisions. Candidate identity is `(slot, artifact)` or `(slot, clip)`, independent of encoding and display name. Current views resolve the clip's current revision; decision events record the revision seen at decision time, and actual-input edges pin the production revision. A correction changes neither candidate review state nor selected candidate identity. New human decisions use the current revision and retain it in their events. Supports R14, R25, R38–R40, R46. (session-settled: user-directed — chosen over pinning current selection until reselection: implement the R40 distinction between current selected playback and historical referents.)
+- KTD8. **Explicit, atomic creative commands.** Review, slot selection, and human stage remain separate. Selected-candidate rejection plus keep/clear/replace is one transaction with relevant candidate/slot revisions; replacement must belong to the slot. Agent decisions retain instruction text or an immutable local copy of referenced authority. Browser commands retain the deliberate action as authority. Record agent-relayed authority as reported, not verified human identity. Invalid authority, replacement, or revisions change nothing. Transport authentication alone is not creative authorization. Supports R8, R12, R16–R19, R38.
 
-  Clip-targeted decisions submit the playback revision actually observed; the transaction checks it against the current revision and returns a conflict if correction intervened.
-  Actual playback-specific production inputs must supply the exact used revision, never default to the current one at capture time.
-  If that revision is unknown, record the known artifact relationship and an explicit playback-history gap rather than invent an exact clip input.
+- KTD9. **Bounded retrieval with truthful continuation.** Use relational filters, recursive effective-lineage queries, and FTS5 over transactional current and revision-addressable historical text projections. Current text is the default; historical hits identify the matching revision. Backfill both scopes from existing records before enabling search. Keyset cursors bind query/filter/order and the global mutation watermark; any intervening mutation requires a fresh query instead of mixing snapshots. Context provides every R5 category, explicit truncation/continuation for each bounded collection or text field, and full-record retrieval. No artistic ranking or source recommendation. Supports R5–R7, R20–R23, R36.
 
-- KTD8. **Creative mutations are explicit, atomic commands.** Keep candidate review state separate from the slot's nullable selected-candidate ID. Selection must reference a candidate in that slot. Rejecting its selected candidate requires keep, clear, or a replacement candidate in the same transaction, with the relevant expected slot/candidate revisions. Agent-recorded stage, selection, and review commands require retained human instruction text or an immutable local copy of its referenced content. Direct UI actions record the deliberate action as authority. Label agent-relayed authority as reported, not verified human identity. Missing authority, a stale revision, or an invalid replacement changes nothing. Supports R8, R12, R16–R19, R38.
+- KTD10. **Thin MCP stdio adapter.** Use the supported MCP TypeScript server SDK, shared input/result contracts, and the operation families below. Resources and media tools identify artifacts/members by opaque IDs, with exact originals separate from bounded previews. The bridge reads only explicitly supplied local paths and streams bytes to HTTP; the server accepts bytes, never arbitrary server-local paths. Preserve service errors, keep stdout protocol-only, and send diagnostics to stderr. Notes, prompts, filenames, and metadata are recorded evidence, never tool instructions or human authority. Supports R4–R11, R41–R45.
 
-- KTD9. **Queryable records and bounded, expandable context.** Use indexed relational filters, recursive lineage queries, and SQLite FTS5 over a transactional text projection. Browse all candidates unless a filter is explicitly supplied. Search current facts by default and expose historical-text matches through an explicit history option; each historical hit identifies its revision. Keyset cursors carry query identity and a database revision watermark. If the watermark changes, require a fresh query rather than silently mix snapshots. Task context returns the R5 categories, each with explicit omitted counts or `has_more` and continuation operations. Long notes, provenance, and candidate collections have visible truncation boundaries and full-record retrieval. No opaque artistic ranking, recommended source, or inferred selection. Supports R5–R7, R20–R23, R36.
+- KTD11. **Preserved originals and sourced playback.** Use original PNG/GIF display, browser GIF decoding, bounded Sharp inspection/full validation, and a bounded GIF control-block reader to distinguish encoded timing from decoder defaults. Header metadata alone does not establish decodability; validate all bounded GIF frames. Regular grids and explicit PNG sequences use cumulative recorded durations in a canvas scheduler. Validate geometry, order, and positive supplied durations. Report encoded timing separately from viewer clamping; variable timings need no invented single FPS. Complete opaque/undecodable bytes may be captured under R41 but have unavailable preview, not a false supported-media claim. Only verified image types display inline; other originals download safely. Supports R24–R27, R31, R40, R46.
 
-  U7 atomically backfills both current and revision-addressable historical text from existing records before enabling search.
-  It installs projection maintenance for every mutation path; migration failure rolls back both index changes and schema version.
+- KTD12. **Preserve the local trust boundary.** Keep exact Host/Origin/credentials in the existing early Fastify hook, before upload consumption. Retain loopback binding, disabled proxy trust/broad CORS, paired HttpOnly SameSite=Strict browser sessions, CSRF for browser mutations, and a separate per-start bridge bearer. Pairing remains short-lived, single-use, profile-bound, and absent from URLs/logs/MCP output. Verify Windows private-profile ACLs and reject substituted/reparse-point paths before migrations and content operations. Never serve the artwork directory as a static root. Use fixed verified MIME, `nosniff`, same-origin CSP, safe downloads, and inert rendering of recorded text. Same-user malware, administrators, and compromised MCP hosts remain outside this boundary.
 
-- KTD10. **Thin MCP adapter with explicit tool discovery.** Use the supported MCP TypeScript SDK's stdio server with structured tool inputs/results. Ordinary tools cover catalog operations, requests/outcomes, capture, corrections, playback descriptions, decisions, search/context, lineage, and history. Artifact resources use opaque IDs; a media-reading tool also exposes supported captured images so access does not depend on a host automatically loading resources. Preserve complete original-file access separately from bounded image previews. The bridge reads explicitly supplied local paths and streams bytes to the authenticated capture API; HTTP accepts bytes, never arbitrary server-local paths. Logs go to stderr only. Supports R4–R11, R41–R45.
+- KTD13. **One production workbench with independent navigation state.** Build Svelte components around the R47–R48 baseline rather than transplanting prototype HTML/fixtures. Keep project/asset/slot IDs, filters, viewed target, and inspector tab as navigation state; review and selection come only from server records. Opening or changing the viewed target performs reads only. Back restores the slot/filter and refreshes records without silently changing filters. Preserve both theme treatments; use the operating-system preference on first use and a local explicit preference thereafter, without claiming the user selected a default. Supports R16, R18, R47–R48, AE19. (session-settled: user-approved — chosen over table-first and spacious-gallery arrangements: implement the accepted compact browse/review baseline, with later refinement allowed.)
 
-  Returned notes, prompts, filenames, and tool-supplied metadata are labeled recorded evidence, not executable instructions or human authority.
-  The bridge never extracts a file-read request from that text automatically.
+### Dependencies and Integration Constraints
 
-- KTD11. **Browser playback, preserved originals, sourced timing.** Display original PNG/GIF files; use the browser's GIF decoder rather than a second GIF compositor. Sharp performs bounded image inspection and supported-media validation without replacing originals. A small bounded GIF control-block reader distinguishes encoded delays from absent controls; Sharp's defaulted delay is not an encoded fact. Report encoded duration separately from viewer timing/clamping, and do not invent one FPS for variable-duration frames. Regular-grid clips and explicit PNG sequences use a canvas scheduler based on cumulative recorded durations. Grid descriptions include cell size, origin, spacing, frame indices/order, and timing; reject out-of-bounds geometry and nonpositive supplied durations. Without sufficient valid data, expose unconfigured playback and a still view. Supports R24–R27, R31, R40, R46.
-
-  Capture completeness and preview eligibility are separate results.
-  A complete preserved byte manifest may be registered even when opaque or undecodable, per R41; it receives an explicit unavailable preview rather than a false supported-media claim.
-  Missing represented members remain a capture failure under R29.
-  Only media verified for inline display receives an image response; other originals remain downloadable without script execution.
-
-- KTD12. **Protect the local service and its private profile.** Bind to `127.0.0.1`; enforce exact Host, Origin, and request-credential checks in a Fastify early request hook before body parsing, uploads, static fallback, or media access. Disable proxy trust and broad CORS. Browser APIs/media require an HttpOnly SameSite=Strict session; mutations also require same-origin requests and a CSRF header. Missing or foreign Origin cannot bootstrap a browser session.
-
-  Browser pairing requires a short-lived, single-use, profile-bound capability from the private local launcher.
-  The launcher displays it only on explicit interactive request; the human pastes it into the local pairing form for exchange by same-origin POST.
-  It never appears in URLs, static assets, application logs, or MCP output.
-  Rotate session keys and the separate MCP bearer on each service start.
-  Bridge discovery is bound to its selected canonical profile.
-
-  Verify current-user Windows ACLs on the entire profile, including SQLite/WAL, artwork, staging, ownership locks, and discovery files, before migrations.
-  Refuse insecure or substituted reparse-point paths rather than claiming `chmod` supplies Windows privacy.
-  Render recorded text as text, not HTML.
-  Use verified fixed image MIME types, `nosniff`, restrictive same-origin CSP, and download disposition for nonpreview originals.
-  Never expose the content directory as a static root or interpolate uploaded names into paths.
-  Same-user malware, administrators, and compromised MCP hosts remain outside this boundary.
-
-### Dependency Baseline
-
-Pin the compatible versions below and commit the resulting lockfile during implementation.
-These are documentation/registry findings, not an installation or runtime result.
-
-| Component | Selected baseline | Reason or compatibility constraint |
+| Component | Checkout or planned baseline | Constraint |
 | --- | --- | --- |
-| Node.js | 24.21.0 LTS | Bundles SQLite 3.53.4 with FTS5; `node:sqlite` remains release-candidate, so isolate its use behind repositories. |
-| NestJS core/common/platform-fastify | 11.2.6 together | Required framework; this adapter uses Fastify 5.11.3. |
-| Fastify static plugin | 10.1.5 | Matches this Nest adapter's `^10.1.2` peer; do not mix the older static 8.x pairing from earlier Nest patches. |
-| Svelte / Vite / Svelte Vite plugin | 5.57.1 / 8.3.1 / 7.3.1 | Compatible documented peers and Node engines; use the Svelte TypeScript SPA template, not SSR. |
-| MCP server SDK / shared validation | `@modelcontextprotocol/server` 2.2.0 / Zod 4 | SDK v2 is stable; share schemas and response types, not backend storage code. |
-| Sharp | 0.35.5 | Maintained PNG/GIF decoder with Windows x64 prebuilt dependencies; this is still a native installation dependency. |
-| Tests / package manager | Node test runner / pnpm | Use real temporary stores for domain integration tests; pin pnpm and TypeScript versions when creating the workspace. |
+| Node / pnpm / TypeScript | Existing `>=24.21.0 <25` / `12.6.0` / `5.9.3` | Keep the pinned workspace and lockfile; isolate `node:sqlite` behind the existing database boundary. |
+| Nest / Fastify / static | Existing Nest `11.2.6`, Fastify `5.11.3`, static `10.1.5` | Preserve `main.ts` adapter/static composition; do not introduce an incompatible `ServeStaticModule` peer set. |
+| Svelte / Vite / plugin | Existing `5.57.1` / `8.3.1` / `7.3.1` | Continue the SPA, not SSR; built UI stays on the authenticated local service origin. |
+| Shared validation | Existing Zod `4.6.5` | Export contract subpaths consistently with `packages/contracts/package.json`; update both interface callers on contract changes. |
+| MCP | Planned `@modelcontextprotocol/server` `2.2.0` | Not installed. Confirm lockfile/runtime compatibility and actual host initialization during U8; do not use v1 SDK import recipes. |
+| Image inspection | Planned Sharp `0.35.5` | Not installed. Verify Windows x64 native installation and bounded full-frame decode in U5. |
+| Uploads | Planned Fastify-5-compatible multipart plugin | Pin its compatible version in U4; stream parts without body attachment/buffering. |
 
-The service must verify its actual SQLite version, FTS5 support, WAL mode, and foreign-key enforcement at startup.
-Do not enable SQLite extension loading.
-The documented WAL-reset defect is fixed in SQLite 3.51.3 and later; reject an older unpatched build rather than trust the Node version string.
-Use Fastify-compatible upload/static plugins and Nest adapter APIs, not Express/Multer recipes.
-No OpenAI SDK or credentials belong in the Nest dependency graph.
+The existing SQLite capability checks remain: actual bundled SQLite at least 3.51.3, FTS5, foreign keys, WAL, FULL commits, and disabled extension loading.
+U2 adds an ordered migration registry; reserve `002-domain-integrity.sql` for constraint corrections and `003-search.sql` for U7.
+No OpenAI SDK or credentials enter the application dependency graph.
+
+Upload limits cover member count, part/field size, per-file and aggregate bytes, and transfer completion.
+A normal stream end is insufficient: truncation, duplicate/unexpected parts, missing members, abort, or malformed metadata prevents publication.
+Media limits separately bound dimensions, frame count, aggregate decoded pixels, and decode work; Sharp's processing timeout does not bound queue wait.
+Document concrete shipped limits and test their boundaries during implementation rather than inventing values here.
 
 ### High-Level Technical Design
 
@@ -440,448 +441,413 @@ No OpenAI SDK or credentials belong in the Nest dependency graph.
 
 ```mermaid
 flowchart TB
-    UI[Svelte browser UI] --> HTTP[Nest HTTP controllers]
-    Host[Agent MCP host] --> Bridge[MCP stdio bridge]
+    Browser[Svelte browser] --> HTTP[Nest controllers]
+    Host[Agent MCP host] --> Bridge[Stdio bridge]
     Bridge --> HTTP
-    HTTP --> Services[Nest application services]
-    Services --> DB[SQLite current records and history]
-    Services --> Store[Immutable artwork directories]
-    Services --> Media[Media inspection and playback descriptions]
-    Agent[External agent workflow] --> Producer[External image producer]
-    Producer --> Files[External result files]
-    Files --> Bridge
+    HTTP --> Domain[Shared application services]
+    Domain --> SQLite[Current records and immutable revisions]
+    Domain --> Content[Private immutable content]
+    Domain --> Media[Bounded media inspection]
+    Agent[External agent workflow] --> Producer[External OpenAI tool]
+    Producer --> Results[Result files]
+    Results --> Bridge
 ```
 
 **Capture protocol**
 
 ```mermaid
 sequenceDiagram
-    participant Client as UI or MCP bridge
-    participant Capture as Nest capture service
-    participant Files as Local content store
-    participant DB as SQLite
-    Client->>Capture: Context, operation ID, declared files, supplied facts
-    Capture->>Files: Stream all members into unique staging directory
-    Capture->>Files: Validate manifest, hash, flush and close
-    Capture->>Files: Publish complete directory
-    Capture->>DB: Commit artifact, associations, facts and operation receipt
-    DB-->>Capture: Commit acknowledged
-    Capture-->>Client: Artifact identity and review link
+    participant Client as Browser or bridge
+    participant Service as Capture service
+    participant Files as Private file store
+    participant DB as SQLite owner
+    Client->>Service: Operation, explicit context, manifest, bytes
+    Service->>Service: Authorize and claim operation
+    Service->>Files: Stream, validate, flush descriptor and members
+    Service->>Files: Close and publish fresh directory
+    Service->>DB: Commit artifact, facts, inputs, placement, receipt
+    DB-->>Service: Commit acknowledged
+    Service-->>Client: Receipt, artifact ID, review link
 ```
 
-**Capture lifecycle and interruption boundary**
+**Capture lifecycle**
 
 ```mermaid
 stateDiagram-v2
     [*] --> Staging
-    Staging --> Published: Every represented file is preserved
     Staging --> Incomplete: Transfer or validation fails
-    Published --> Registered: SQLite commit
-    Published --> Orphan: Process exits before commit
-    Registered --> Registered: Lost response queried by operation ID
+    Staging --> Published: Complete manifest flushed and published
+    Published --> Registered: Receipt transaction commits
+    Published --> Orphan: Process stops before commit
+    Orphan --> Registered: Explicit matching resubmission
+    Registered --> Registered: Lost response recovered by receipt
     Registered --> Unavailable: Later content loss detected
-    Orphan --> Registered: Explicit matching resubmission validates manifest
 ```
 
-Incomplete staging and orphans are technical recovery records, not captured candidates or creative states.
-Startup reconciliation reports them without silently creating artworks or deleting their contents.
-Registered metadata/history survives detection of unavailable content, which is distinct from unknown production history.
-Do not promise hardware power-loss atomicity across the content directory and SQLite: Node's Windows rename does not flush the parent directory as part of the database commit.
-
-**Creative-command branching**
+**Decision branches**
 
 ```mermaid
 flowchart TB
-    Command[Explicit decision and expected revisions] --> Authority{Authority supplied?}
-    Authority -->|No| Refuse[Return error without mutation]
-    Authority -->|Yes| Fresh{Revisions current?}
-    Fresh -->|No| Conflict[Return conflict and current record]
-    Fresh -->|Yes| Reject{Rejecting selected candidate?}
-    Reject -->|No| Commit[Commit event and current values together]
-    Reject -->|Yes| Choice{Explicit keep, clear or valid replacement?}
-    Choice -->|No| Refuse
+    Command[Explicit command and observed revisions] --> Authority{Authority retained?}
+    Authority -->|No| Reject[No mutation]
+    Authority -->|Yes| Fresh{All revisions current?}
+    Fresh -->|No| Conflict[Conflict with current facts]
+    Fresh -->|Yes| Selected{Rejecting selected candidate?}
+    Selected -->|No| Commit[Commit decision and current values]
+    Selected -->|Yes| Choice{Keep, clear, or valid replacement?}
+    Choice -->|No| Reject
     Choice -->|Yes| Commit
 ```
 
-**Record shape**
+**Workbench navigation**
 
-| Record family | Current identity and relation | Retained evidence |
-| --- | --- | --- |
-| Project / logical asset / slot | Opaque stable IDs; asset belongs to project, slot to asset | Names, notes, stage and correction/decision history |
-| Artifact / content member | Artifact belongs to asset; immutable manifest names all content members | Capture operation, hashes, source names and capture time |
-| Request / proposed input / outcome | Request belongs to project/asset; destination is optional | Original intent and exact proposed targets; separately reported outcomes |
-| Provenance assertion / input edge | Effective facts and exact artifact or clip-revision inputs | Source, unknown/absent distinction, superseded revisions and gap assertions |
-| Clip / playback revision | Stable clip ID on artifact; current revision pointer | Every referenced geometry/order/timing revision and its source |
-| Candidate / slot selection | Candidate targets artifact or clip; selection belongs to slot | Per-slot review history, selected target revision at each decision |
-| Audit event / authority | One mutation's actor, target and timestamp | Before/after values, instruction and supplied rationale |
-
-**Shared operation surface**
-
-| Domain action | Human interface | MCP operation family | Commit boundary |
-| --- | --- | --- | --- |
-| Establish/create/find/annotate | Project and asset browser, forms | Catalog list/get/create/update | Current record plus revision history |
-| Define slots/place candidates | Asset slots, unslotted browser | Slot and candidate commands | Placement only; no creative decision |
-| Retain request/report outcome | Asset request/history panel | Request record/get/outcome | Intent snapshot or explicit outcome report |
-| Capture existing/new outputs | File picker or drop, ordered sequence manifest | Capture local files with explicit context | KTD4 |
-| Correct facts or derivation | Inspector correction forms | Provenance/input correction | KTD3, KTD5–KTD6 |
-| Describe/play media | Still viewer, clip editor, playback controls | Describe/get playback; read media | Description revision; reads are mutation-free |
-| Review/select/set stage | Deliberate decision controls | Authority-bearing decision tools | KTD8 |
-| Find/recover context | Filters/search, lineage and history panels | Search/context/lineage/history tools | Consistent read snapshot with continuation |
-
-No operation called “generate artwork” exists in this surface.
-MCP tool descriptions explain R7 and require explicit identifiers for production inputs; a tool cannot prevent an unrelated external producer from being invoked outside the workflow.
-The fresh-agent exercise must therefore verify agent behavior as well as API validation.
-
-### Query and Interface Details
-
-- Slot names are user-provided and unique within an asset after a documented normalization rule; asset names need not be globally unique. Name-based searches return disambiguating IDs and project context.
-- Explicit candidate placement may target artwork from another logical asset without changing artifact ownership or creating a derivation edge. Show both the slot's context and the target's original asset/project; decisions remain slot-scoped under R14.
-- Current filters compose with AND across categories and OR within a category. Review and selection filters operate on candidate placement, not artifact-wide approval.
-- Unslotted means an artifact has no whole-artifact or clip candidate placement. Browsing its other slots must not hide it from an explicitly selected slot's candidate list.
-- Capture-date and production-date filters are separate. Unknown production dates do not become capture dates and are excluded from a known-date range unless the unknown option is explicitly included.
-- Multi-hop lineage reports direction, visited targets, continuation frontier, and encountered gaps. A bounded page is never labeled the full graph.
-- UI navigation uses stable-ID deep links for projects, assets, candidates, artifacts, requests, and historical revisions. Tabs expose current facts, recorded inputs/dependents, and history without replacing the main image.
-- Ordinary browse and side-by-side comparison retain rejected and formerly selected candidates. Controls distinguish approval, review, selection, and human stage without computing a pipeline position.
-- Surface conflicts with the current record and the uncommitted user input; require a new explicit action rather than silently replaying a creative decision.
-- The data directory must be on a local filesystem, not a network share or live synchronized folder. Document a stopped-service directory copy as the initial backup procedure; do not copy only an active SQLite main file.
-
-### Sequencing and Alternatives
-
-Establish the runtime boundary and catalog first, then request/lineage records and immutable capture.
-Media identities precede creative decisions; search/context consumes those records.
-UI and MCP integrate against the same completed application services.
-The final proof crosses all these boundaries and is not replaced by individual unit results.
-
-Direct SQLite access from every MCP subprocess was rejected because it would spread migration ownership and content publication across processes.
-A desktop wrapper adds packaging obligations without improving the required history semantics.
-Database BLOBs would simplify one durability boundary but bind large-file transfer to database writes; the confirmed file-store design retains explicit reconciliation instead.
-Full event sourcing would add replay/versioning machinery when current relational records plus immutable revisions satisfy R38–R40.
-These choices were resolved from the stated workflow and published constraints; no remaining mechanism required a prototype or competing implementation to choose.
-
-### Risks and Execution-Time Checks
-
-| Risk | Mitigation and required evidence |
-| --- | --- |
-| Content publication and SQLite are not one durable transaction | KTD4 ordering, interruption tests, restart reconciliation, and explicit unavailable-content reporting; do not claim recovery of physically lost bytes. |
-| Browser requests reach a privileged local process | KTD12 plus actual hostile-origin and unauthenticated-media checks, not only guard unit tests. |
-| Native Sharp package or SDK host incompatibility | Verify installation on Windows and actual MCP host initialization early; retain exact installed versions in evidence. |
-| Large sheets/sequences exhaust memory or stall requests | Stream originals, bound upload bytes/frame counts/pixel work, inspect outside transactions, and lazily load visible frames. Document shipped limits and exercise their boundaries without changing the required media categories. |
-| GIF decoder defaults become false provenance | Preserve bytes and distinguish encoded control data from decoder/viewer behavior under KTD11. |
-| Synchronous SQLite queries delay media/API responses | Indexed filters, bounded reads, and short transactions; measure founder-sized data before introducing workers or caching. |
-| Human authority is overclaimed | Retain the instruction and recorder under KTD8; state the trusted-local-client boundary rather than claiming authenticated human intent. |
-| External generation changes or credentials are absent | Exercise a currently supported authorized OpenAI tool outside AssetWeave; record actual exposed settings only. Do not replace the live acceptance exercise with a mock. |
-
-Exact helper names, component styling, operational limits, and installation-specific host configuration remain implementation details.
-They do not reopen the selected stack or Product Contract.
-No runtime compatibility, browser behavior, or OpenAI access was tested during planning.
-
-### Sources and Research
-
-- [Nest Fastify adapter](https://docs.nestjs.com/techniques/performance) and [Nest static assets](https://docs.nestjs.com/techniques/mvc): KTD1 and adapter-specific plugin/static routing.
-- [Node 24 SQLite API](https://nodejs.org/docs/latest-v24.x/api/sqlite.html), [pinned SQLite header](https://github.com/nodejs/node/blob/v24.21.0/deps/sqlite/sqlite3.h), and [build flags](https://github.com/nodejs/node/blob/v24.21.0/deps/sqlite/sqlite.gyp): KTD3 and the runtime capability gate.
-- [SQLite transactions](https://www.sqlite.org/lang_transaction.html), [WAL](https://sqlite.org/wal.html), and [FTS5](https://www.sqlite.org/fts5.html): KTD3/KTD9, durable commits, transactional index maintenance, and local-filesystem restrictions.
-- [Node filesystem API](https://nodejs.org/docs/latest-v24.x/api/fs.html) and [Node's bundled Windows filesystem implementation](https://raw.githubusercontent.com/nodejs/node/v24.21.0/deps/uv/src/win/fs.c): KTD4's publication limits and KTD12's Windows permission caveat.
-- [MCP stdio](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio), [SDK v2 tools](https://ts.sdk.modelcontextprotocol.io/v2/servers/tools.md), and [resources](https://ts.sdk.modelcontextprotocol.io/v2/servers/resources.md): KTD10, structured results, transport purity, and host-dependent resource access.
-- [Vite](https://vite.dev/guide/), [Svelte Vite plugin](https://github.com/sveltejs/vite-plugin-svelte), and [Vite development-server security](https://vite.dev/config/server-options): local SPA composition and development-origin constraints.
-- [Sharp installation](https://sharp.pixelplumbing.com/install/), [metadata](https://sharp.pixelplumbing.com/api-input/), and [constructor limits](https://sharp.pixelplumbing.com/api-constructor/): KTD11, native packaging, full validation versus header inspection, and decode bounds.
-- [GIF89a specification](https://www.w3.org/Graphics/GIF/spec-gif89a.txt): encoded frame timing and control-block presence under KTD11.
-- [OWASP CSRF prevention](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html): KTD12.
-- [OpenAI image generation](https://developers.openai.com/api/docs/guides/image-generation) and [deprecations](https://developers.openai.com/api/docs/deprecations): AE17 must use a live supported producer; provider/model names are recorded data, not schema enums.
-
----
-
-## Output Structure
-
-All paths in this tree are proposed.
-
-```text
-apps/
-  server/
-    src/
-      runtime/
-      database/migrations/
-      catalog/
-      requests/
-      provenance/
-      lineage/
-      capture/
-      media/
-      decisions/
-      queries/
-    test/
-  web/
-    src/
-      lib/api/
-      lib/components/
-      features/catalog/
-      features/capture/
-      features/review/
-  mcp/
-    src/
-    test/
-packages/
-  contracts/
-    src/
-    test/
-tests/
-  fixtures/media/
-  integration/
-docs/
-  verification/
+```mermaid
+flowchart TB
+    Nav[Project / asset / slot navigation] --> Grid[Filtered candidate grid]
+    Grid -->|Open artwork: read only| Review[Large viewer and alternatives filmstrip]
+    Review --> Inspector[Facts / inputs / history]
+    Review -->|Back: same slot and filters| Grid
+    Review --> Action[Explicit review or selection command]
+    Action --> Domain[Shared decision service]
+    Domain --> Refresh[Refresh server decisions independently of viewed target]
 ```
+
+On desktop, navigation and inspector remain beside the center view.
+Narrow layouts expose navigation through a drawer and record details through a disclosure.
+A viewed target outside a refreshed filter remains identified until the user leaves it; returning shows the refreshed filtered grid, including its empty state.
+Browser back/forward and deep links resolve stable IDs without creating creative events.
+
+### Shared Operation Surface
+
+| Domain action | Browser surface | MCP family | Owning mechanism |
+| --- | --- | --- | --- |
+| Establish/find/create/annotate | Project and asset navigation/forms | Catalog operations | KTD1, KTD3 |
+| Define slots/place candidates | Slot and unslotted views | Slot/candidate operations | KTD3, KTD7 |
+| Retain request/report outcome | Request panel/forms | Request operations | KTD6 |
+| Capture files | File picker/drop and sequence order form | Explicit local-file capture | KTD4 |
+| Inspect/correct provenance and inputs | Record inspector/forms | Claim/lineage operations | KTD5–KTD7 |
+| Describe/read media | Viewer and playback configuration | Playback/media tools/resources | KTD7, KTD11 |
+| Review/select/set stage | Deliberate decision controls | Authority-bearing decisions | KTD8 |
+| Search/recover/traverse | Filters, search, history, lineage | Search/context/history | KTD9 |
+
+There is no generation operation.
+The fresh-agent exercise must verify R7 as agent behavior: API validation cannot prevent an unrelated external tool invocation.
+
+### Query, Error, and Navigation Contracts
+
+- Preserve current slot normalization: Unicode NFKC, trimmed/collapsed whitespace, lowercase, unique within an asset. Same-named assets remain distinguishable by project and ID.
+- Explicit placement can reuse another asset's artwork without changing ownership or inventing lineage. Display both slot context and original artifact context.
+- Filters combine AND across categories and OR within a category. Review/selection refer to slot candidates, not artifact-wide approval. Unslotted means no whole-artifact or clip placement anywhere.
+- Capture and production dates are separate filter dimensions. A known production-date range excludes unknown dates unless the user includes them explicitly.
+- Lineage continuation includes direction, visited targets, frontier, and encountered gaps. Historical text matches retain revision identity while current detail uses effective records.
+- Centralize the shared error envelope for invalid input, not found, revision conflict, missing authority, incomplete capture, content unavailable, and service unavailable. Keep safe details and current revisions available to both clients; never return success-shaped errors.
+- An open form preserves its unsent input on conflict and requires a new deliberate submission. No automatic replay of creative commands.
+- Retain pairing/connection routes alongside stable-ID project, asset, candidate, artifact, request, and historical-revision links. A locked session preserves the intended return destination but never displays stale private content as authenticated.
+- Remote MCP changes are reconciled on explicit refresh, focus, and mutation completion; no new realtime subscription system is needed. Corrected playback refetches by revision, not only clip ID.
+
+### Sequencing, Risks, and Sources
+
+Preserve U1, complete U2, then build U3–U7 in dependency order.
+U8 and U9 may integrate independently against those services; U10 completes review and U11 proves the whole workflow.
+No unit is a substitute for complete acceptance.
+
+Direct SQLite access from each bridge would split ownership; full event sourcing would add replay machinery; a desktop wrapper would add packaging without serving the required history semantics.
+The retained filesystem choice accepts explicit reconciliation rather than moving artwork into database BLOBs.
+No consequential mechanism remains open that requires competing implementations.
+
+| Risk | Treatment and evidence |
+| --- | --- |
+| Partial schema predates service workflows | Forward migration and populated version-1 fixtures in U2; prove multi-fact/multi-input registration and historical clip referential integrity. |
+| Filesystem publication and SQLite differ | KTD4 interruption/replay tests and unavailable-content reporting; no power-loss durability claim. |
+| Upload/media exhaustion | Streaming, parser truncation checks, bounded decode outside transactions, lazy visible-frame loading, and boundary scenarios. |
+| UI/MCP conflict or authority confusion | KTD7–KTD10 revision/authority enforcement in shared services; verify real mixed-interface operations. |
+| Search diverges from revisions | Transactional maintenance and backfill of both current/history scopes; prove correction and rollback behavior. |
+| Prototype copied as production truth | R47–R48 govern layout; real service data supplies every record. Six prototype crops remain fictional stills. |
+| Provider or founder unavailable | Finish local work; keep AE17 and founder metrics explicitly unaccepted until exercised. |
+| Sensitive local records leak | KTD12 actual listener/media tests; evidence contains no credentials, private artwork, or personal paths without authorization. |
+
+The data profile stays on a local filesystem, outside the checkout and live sync roots.
+Initial backup is a stopped-service copy of the complete profile, not a copy of an active SQLite main file alone.
+
+Useful implementation evidence:
+- `apps/server/src/database/database.service.ts`: migration ownership, expected revisions, transaction/projection hook.
+- `apps/server/src/catalog/catalog.service.ts` and `catalog.repository.ts`: existing service/repository pattern.
+- `packages/contracts/src/catalog.ts`: strict inputs and canonical slot-name normalization.
+- `.context/compound-engineering/ce-prototype/2026-09-29-artwork-visual-style/decisions.md` and `.context/compound-engineering/ce-prototype/2026-09-29-artwork-visual-style/01-visual-treatment/screens/{index.html,styles.css,app.js}`: accepted local visual reference. These ignored files are optional implementation aids; R47–R48 and AE19 remain portable authority.
+- [Fastify hooks](https://fastify.dev/docs/v5.11.x/Reference/Hooks/) and [multipart](https://github.com/fastify/fastify-multipart): KTD12 pre-body authorization and U4 streaming/truncation handling.
+- [Node 24 filesystem API](https://nodejs.org/docs/latest-v24.x/api/fs.html): KTD4 flush/publication limitations.
+- [SQLite transactions](https://www.sqlite.org/lang_transaction.html), [WAL](https://sqlite.org/wal.html), and [FTS5](https://www.sqlite.org/fts5.html): KTD3/KTD9 transaction, runtime, and projection constraints.
+- [MCP 2.2.0 stdio](https://github.com/modelcontextprotocol/typescript-sdk/blob/v2.2.0/docs/serving/stdio.md), [SDK v2 tools](https://ts.sdk.modelcontextprotocol.io/v2/servers/tools.md), and [resources](https://ts.sdk.modelcontextprotocol.io/v2/servers/resources.md): KTD10; verify actual host handling of structured results and media.
+- [Sharp installation](https://sharp.pixelplumbing.com/install/), [metadata](https://sharp.pixelplumbing.com/api-input/), and [constructor](https://sharp.pixelplumbing.com/api-constructor/): KTD11 Windows packaging, header-versus-full decode, and limits.
+- [GIF89a](https://www.w3.org/Graphics/GIF/spec-gif89a.txt): encoded timing versus viewer behavior.
+- [OpenAI image generation](https://developers.openai.com/api/docs/guides/image-generation) and [deprecations](https://developers.openai.com/api/docs/deprecations): use a supported external capability at exercise time, not a fixed producer/model enum.
 
 ---
 
 ## Implementation Units
 
+Existing U-IDs retain their original concern; file additions below are proposed unless listed in Repository Baseline.
+Changes to shared contracts include their callers, exports, and package/test integration in the owning unit.
+
 | U-ID | Change | Primary paths | Depends on |
 | --- | --- | --- | --- |
-| U1 | Runnable Nest workspace and local boundary | `apps/server/src/runtime/`, root manifests | None |
-| U2 | Catalog, persistence, and revision records | `apps/server/src/catalog/`, `apps/server/src/database/` | U1 |
-| U3 | Requests, claims, and exact input history | `apps/server/src/requests/`, `apps/server/src/provenance/`, `apps/server/src/lineage/` | U2 |
-| U4 | Immutable complete capture | `apps/server/src/capture/` | U2, U3 |
-| U5 | Media and versioned playback descriptions | `apps/server/src/media/` | U4 |
+| U1 | Preserve runtime and local boundary | `apps/server/src/runtime/`, `apps/server/src/main.ts` | None |
+| U2 | Complete catalog and revision persistence | `apps/server/src/database/`, `apps/server/src/catalog/` | U1 |
+| U3 | Requests, assertions, exact input history | `apps/server/src/requests/`, `apps/server/src/provenance/`, `apps/server/src/lineage/` | U2 |
+| U4 | Complete immutable capture | `apps/server/src/capture/` | U2, U3 |
+| U5 | Media and playback descriptions | `apps/server/src/media/` | U4 |
 | U6 | Human-authorized creative decisions | `apps/server/src/decisions/` | U2, U5 |
-| U7 | Filters, search, lineage, and task context | `apps/server/src/queries/` | U3–U6 |
-| U8 | MCP parity and local-file streaming | `apps/mcp/src/` | U1, U7 |
+| U7 | Filters, search, lineage, context | `apps/server/src/queries/` | U3–U6 |
+| U8 | MCP stdio parity | `apps/mcp/` | U1, U7 |
 | U9 | Browser organization and capture | `apps/web/src/features/catalog/`, `apps/web/src/features/capture/` | U4, U7 |
-| U10 | Browser review, playback, and correction | `apps/web/src/features/review/` | U5–U7, U9 |
-| U11 | Complete founder workflow proof and operating docs | `tests/integration/`, `docs/verification/` | U8, U10 |
+| U10 | Browser review, playback, correction | `apps/web/src/features/review/` | U5–U7, U9 |
+| U11 | Complete workflow proof and docs | `tests/integration/`, `docs/verification/` | U8, U10 |
 
 ### U1. Runnable Nest workspace and local boundary
 
-**Goal:** Start an independently useful local Nest service and serve the browser shell through the intended security boundary.
+**Goal:** Preserve the existing runnable foundation while integrating domain routes.
 **Requirements:** R1–R4; A1, A2, A4.
 **Dependencies:** None.
-**Files:** `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `.node-version`, `tsconfig.base.json`, `.gitignore`, `apps/server/package.json`, `apps/server/src/main.ts`, `apps/server/src/app.module.ts`, `apps/server/src/runtime/runtime.module.ts`, `apps/server/src/runtime/local-access.plugin.ts`, `apps/server/src/runtime/profile.service.ts`, `apps/server/test/runtime.test.ts`, `apps/web/package.json`, `apps/web/vite.config.ts`, `apps/web/src/App.svelte`, `packages/contracts/package.json`, `packages/contracts/src/errors.ts`.
-**Approach:**
-1. Establish the KTD1 dependency graph and baseline versions, with Nest compilation preserving decorator metadata.
-2. Implement profile ownership, loopback binding, credential discovery, browser sessions, and clean shutdown under KTD2/KTD12.
-3. Serve built static assets with an explicit UI fallback that cannot mask API/media failures; expose no placeholder domain endpoints.
-**Patterns to follow:** Nest's documented Fastify adapter/plugin APIs; no existing repository code.
+**Files:** Existing root manifests/lockfile, `apps/server/src/main.ts`, `apps/server/src/app.module.ts`, `apps/server/src/runtime/`, `apps/server/test/runtime.test.ts`, `apps/web/src/App.svelte`, `packages/contracts/src/errors.ts`.
+**Approach:** Retain the KTD1/KTD2/KTD12 implementation and historical verification, not rebuild it. Add only integration changes required by later units. Preserve static SPA fallback exclusions for API/media and profile ownership.
+**Patterns to follow:** Existing early access hook, profile service, pairing flow, and real private-profile fixtures.
 **Test scenarios:**
-1. Starting a second service for the same profile refuses to write; a different profile cannot reuse its credentials.
-2. Wrong Host, foreign/null Origin, missing CSRF, absent bearer, and pre-restart bearer cannot mutate or read private records/media.
-3. Valid same-origin session and bridge credentials reach the same service; closing a browser does not stop it.
-4. API/media not-found remains an error rather than returning the SPA document.
-5. Forged same-origin headers without a pairing capability cannot obtain a session; used, expired, wrong-profile, and pre-restart capabilities/cookies fail.
-6. Hostile-origin multipart requests are rejected before any staging file is created; an insecure custom profile fails startup before migrations.
-**Execution note:** Prove the actual listener, Windows private-file permissions, and production static build before adding domain features.
-**Verification:** A real browser opens the built shell; explicit start/stop and host rejection work on Windows, with secrets absent from logs.
+1. Existing ownership, pairing expiry/single-use, profile isolation, startup credential rotation, Host/Origin/CSRF, and API/media-not-found behaviors remain valid.
+2. New protected upload/media routes reject unauthorized requests before file creation or private content delivery.
+3. Direct authenticated workbench deep links load the SPA without turning unknown API/media paths into HTML.
+**Verification:** Production service and browser pairing still operate on Windows after integration; no secret appears in logs or URLs.
 
 ### U2. Catalog, persistence, and revision records
 
-**Goal:** Persist project/asset/slot identities and annotations with a reusable transactional history mechanism.
-**Requirements:** R2–R4, R12–R15, R38–R39; F2, AE1.
+**Goal:** Complete the existing catalog and make its persistence safe for compound workflow writes.
+**Requirements:** R2–R4, R12–R15, R38–R40; F2, AE1.
 **Dependencies:** U1.
-**Files:** `apps/server/src/database/database.module.ts`, `apps/server/src/database/database.service.ts`, `apps/server/src/database/migrations/001-domain.sql`, `apps/server/test/helpers/store-fixture.ts`, `apps/server/src/catalog/catalog.module.ts`, `apps/server/src/catalog/catalog.service.ts`, `apps/server/src/catalog/catalog.controller.ts`, `apps/server/src/catalog/catalog.repository.ts`, `packages/contracts/src/catalog.ts`, `apps/server/test/catalog.test.ts`, `apps/server/test/database.test.ts`.
-**Approach:** Establish KTD3's complete constrained schema and global mutation watermark in `001-domain.sql`; later units add services over it, not references to tables that do not yet exist. Provide real temporary-store fixtures with valid immutable bytes and revision records for isolated service tests. Implement catalog names/notes/slots while leaving creative mutation services to U6. No destructive artwork deletion operation is needed.
-**Patterns to follow:** KTD1 service/controller/repository boundary; SQLite transaction and foreign-key documentation.
+**Files:** Existing `apps/server/src/database/database.service.ts`, `database.module.ts`, `apps/server/src/database/migrations/001-domain.sql` as migration input, `apps/server/src/catalog/`, `packages/contracts/src/catalog.ts`, `apps/server/test/helpers/store-fixture.ts`; new `apps/server/src/database/migrations/002-domain-integrity.sql`, `apps/server/test/database.test.ts`, `apps/server/test/catalog.test.ts`.
+**Approach:**
+1. Preserve partial code and characterize persisted behavior before altering its transaction mechanism.
+2. Add ordered migration registration and a forward migration correcting audit-event cardinality, selection composite foreign keys, and retained-revision protections under KTD3.
+3. Keep one mutation owner while allowing multiple transaction-scoped writes and one coherent before/after audit result.
+4. Finish catalog error handling and behavioral coverage using current normalization and ownership rules.
+**Patterns to follow:** `DatabaseService.mutate`, `CatalogRepository`, strict shared schemas; profile-backed fixtures use the private local-application-data convention, not an insecure shared temp root.
 **Test scenarios:**
-1. Covers AE1. Create a project and asset, close/reopen the store, and retrieve the same IDs and notes with no invented stage or slots.
-2. Same-named assets in separate projects remain distinguishable; duplicate normalized slot names within an asset are rejected.
-3. Annotation correction exposes the new value and retained old value; stale expected revision leaves both current state and history unchanged.
-4. A failed migration rolls back its version/changes; a database from an unsupported newer schema is refused without mutation.
-5. Candidate targets, selection ownership, artifact inputs, and clip-revision references reject dangling or incompatible IDs with foreign keys enabled.
-**Verification:** Actual HTTP creation and retrieval survive service restart; failed mutations do not leave partial history.
+1. Covers AE1. Create project/asset/slots, restart, and retrieve unchanged IDs/notes with no fabricated stage or selection.
+2. Same-named assets in different projects remain distinguishable; equivalent normalized slot names conflict within one asset.
+3. A stale annotation correction changes neither current values, history, authority, nor watermark.
+4. Upgrade a populated version-1 store without losing IDs/history/content references; failed migration rolls back schema/version, and unsupported newer schema is refused without mutation.
+5. One compound mutation can retain several provenance/input revisions and a valid clip-selection history; incompatible parent/clip/slot references fail atomically.
+6. Mutating or deleting retained revisions is refused, while a new revision and effective-pointer change succeed.
+7. Projection failure rolls back all compound rows and the mutation watermark.
+**Verification:** Real API catalog operations survive restart; migration and transaction proof uses real SQLite, not mocked repositories.
 
 ### U3. Requests, claims, and exact input history
 
-**Goal:** Record intent before production and preserve supplied provenance and actual derivation independently.
+**Goal:** Retain production intent and effective/historical evidence independently.
 **Requirements:** R9–R10, R30–R39, R41–R44; F1, F2, F4.
 **Dependencies:** U2.
-**Files:** `apps/server/src/requests/requests.module.ts`, `apps/server/src/requests/requests.service.ts`, `apps/server/src/requests/requests.controller.ts`, `apps/server/src/provenance/provenance.service.ts`, `apps/server/src/lineage/lineage.service.ts`, `packages/contracts/src/production.ts`, `apps/server/test/production.test.ts`, `apps/server/test/lineage.test.ts`.
-**Approach:** Implement KTD5–KTD6 services over the U2 schema. Keep request outcome reporting separate from capture and expose a request receipt before external work. U3 tests use valid stored-record fixtures; U4 supplies real capture-driven integration, U5 creates clip revisions, and U6 exercises decision-preserving reuse. Foreign-key checks apply from the first migration, not as a later repair.
-**Patterns to follow:** U2's transaction/revision mechanism; no provider-specific request subclasses.
+**Files:** New `apps/server/src/requests/{requests.module.ts,requests.service.ts,requests.controller.ts}`, `apps/server/src/provenance/provenance.service.ts`, `apps/server/src/lineage/lineage.service.ts`, `packages/contracts/src/production.ts`, `apps/server/test/production.test.ts`, `apps/server/test/lineage.test.ts`; existing application-module/contracts exports.
+**Approach:** Implement KTD5–KTD6 over the retained schema. Expose request/outcome, assertion/correction, input/gap, and history operations; use transaction-scoped writes for later capture composition. Do not build a producer runner.
+**Patterns to follow:** U2 revision checks and transaction ownership; provider-independent assertion records.
 **Test scenarios:**
-1. Covers AE9. Proposed G003 and later actual G005 remain distinct; a request with no reported outcome remains unknown after restart.
-2. Covers AE10. Omitted prompt, explicitly unknown seed, and positively absent negative prompt remain distinguishable from supplied values.
-3. Covers AE7. Three inputs across logical assets retain independent roles; reusing a rejected source does not change its decisions.
-4. Correcting an input updates effective traversal but preserves the previous edge and actor/time; self-links and cycles fail without changing the graph.
-5. A reported failure/cancellation remains visible even when an output is later captured; capture does not overwrite the report.
-**Verification:** Retrieve the request and corrected multi-input history through real service calls, including an explicit gap in source history.
+1. Covers AE9. A retained request proposes G003, later result uses G005, and an unreported outcome remains unknown after restart.
+2. Covers AE10. Omitted prompt, unknown seed, absent negative prompt, and supplied values retain distinct states and sources.
+3. Covers AE7. Three inputs across assets preserve roles; a rejected input remains rejected when reused.
+4. Covers AE14. Correct/retract an input edge: effective traversal changes, earlier edge and actor/time remain accessible, and cycle/self-link attempts leave no mutation.
+5. A reported failure/cancellation remains inspectable after later capture; invalid project/asset/request associations fail.
+**Verification:** Public service operations retrieve a request, multi-input branch, correction, and explicit gap from a restarted real store.
 
 ### U4. Immutable complete capture
 
-**Goal:** Capture one complete creative result independently of its external location.
+**Goal:** Preserve one complete creative result independently of external files.
 **Requirements:** R11, R15, R24, R28–R31, R34, R41–R44; F1, F2.
 **Dependencies:** U2, U3.
-**Files:** `apps/server/src/capture/capture.module.ts`, `apps/server/src/capture/capture.service.ts`, `apps/server/src/capture/capture.controller.ts`, `apps/server/src/capture/content-store.ts`, `apps/server/src/capture/reconcile.ts`, `packages/contracts/src/capture.ts`, `apps/server/test/capture.test.ts`, `apps/server/test/capture-recovery.test.ts`.
-**Approach:**
-1. Implement KTD4 manifest-based streaming for single files and ordered multi-file results; frame sequence membership comes from the manifest, not filename sorting.
-2. Register metadata, supplied facts, actual inputs, optional request linkage, and optional candidate placement in one commit after publication.
-3. Add operation receipt lookup and startup reconciliation. A failed transfer never becomes a complete artifact; no request/approval/selection is fabricated for after-the-fact imports.
-**Patterns to follow:** U2 transactions and U3 claim/input records; Node same-volume publication limits.
+**Files:** New `apps/server/src/capture/{capture.module.ts,capture.service.ts,capture.controller.ts,content-store.ts,reconcile.ts}`, `packages/contracts/src/capture.ts`, `apps/server/test/capture.test.ts`, `apps/server/test/capture-recovery.test.ts`; existing server manifest, lockfile, module and contract exports.
+**Approach:** Implement KTD4 streaming, claims, descriptors, receipt lookup, and explicit resubmission. Commit artifact, members, facts, actual inputs, optional request link, and placement together via U2/U3. Authenticate before parsing; preserve KTD12 on every content path.
+**Patterns to follow:** Existing early Fastify authorization and profile directories; U3 transaction-scoped writes.
 **Test scenarios:**
-1. Covers AE2. Delete or modify the external original after capture; retrieved bytes match the original hash, while a new capture has a new artifact ID.
-2. Covers AE18. Missing sequence member, interrupted upload, disk write failure, or failed publication returns no successful artifact and preserves any existing request.
-3. Interrupt before publication, after publication, and after database commit; restart reveals respectively incomplete staging, an orphan, or the committed artifact.
-4. Lost success response followed by matching operation lookup/resubmission yields the same artifact; changed content under that operation ID is refused.
-5. Browser path-shaped input cannot make the server read local files; adversarial uploaded names cannot escape the store.
-6. Covers AE1 / AE10. Minimal unslotted import succeeds with no managed request or producer facts.
-7. Race identical and different complete uploads under one operation ID: only one artifact commits; altered content/context cannot replace its receipt.
-8. Replay an orphan with matching bytes but changed request/input facts: it is refused. Exact replay retains the original context and succeeds once.
-9. Capture three real source artifacts and a multi-input result through the API, then correct an edge; effective and historical relationships match U3's rules.
-10. Preserve complete opaque/undecodable bytes without claiming a playable preview; missing declared sequence members still fail capture.
-**Verification:** Exercise real files on Windows, including a multi-frame capture and a process interruption; verify exact bytes after restart.
+1. Covers AE2. Edit/delete the external original; retrieved bytes retain the captured hash, and new capture creates another artifact.
+2. Covers AE18. Missing/duplicate sequence member, truncated part, aborted stream, byte limit, disk failure, or publication failure produces no successful artifact.
+3. Interrupt before publication, after publication, and after database commit; restart distinguishes incomplete staging, orphan, and committed receipt.
+4. Identical explicit resubmission after lost response returns one artifact; changed bytes/context under the same operation conflict. Concurrent submissions cannot replace the active transfer or committed receipt.
+5. Matching orphan replay revalidates current references/cycles; changed request, facts, or inputs cannot reuse its descriptor.
+6. Covers AE1 / AE10. Minimal unslotted import needs no producer/request; complete opaque bytes have unavailable preview rather than failed preservation.
+7. Real API capture stores several facts and three actual inputs atomically; a final association failure leaves no registered artifact or partial history.
+8. Path-shaped metadata cannot read server files or escape the store; unexpected parts and destination collision cannot overwrite preserved content.
+**Verification:** Exercise real Windows files, a complete sequence, explicit receipt recovery, and process interruption. Hash originals after restart; do not infer power-loss guarantees.
 
 ### U5. Media and versioned playback descriptions
 
-**Goal:** Inspect supported captured artwork and expose recoverable, sourced playback descriptions.
+**Goal:** Serve supported captured media and sourced current/historical playback descriptions.
 **Requirements:** R14, R24–R27, R31, R39–R40, R46; F3.
 **Dependencies:** U4.
-**Files:** `apps/server/src/media/media.module.ts`, `apps/server/src/media/media.service.ts`, `apps/server/src/media/media.controller.ts`, `apps/server/src/media/gif-controls.ts`, `packages/contracts/src/media.ts`, `packages/contracts/src/playback.ts`, `apps/server/test/media.test.ts`, `apps/server/test/playback.test.ts`, `tests/fixtures/media/`.
-**Approach:** Implement KTD7/KTD11 services over U2's clip/revision schema and authenticated content access. Keep preview eligibility separate from capture success and supplied production claims. Description corrections create new revisions; expose current and historical resolution. Exercise U3 actual-input validation using playback revisions created through this service.
-**Patterns to follow:** U3 assertion sources and U4 immutable manifests; Sharp documented limits.
+**Files:** New `apps/server/src/media/{media.module.ts,media.service.ts,media.controller.ts,gif-controls.ts}`, `packages/contracts/src/media.ts`, `packages/contracts/src/playback.ts`, `apps/server/test/media.test.ts`, `apps/server/test/playback.test.ts`, `tests/fixtures/media/`; existing dependency/module/contracts integration.
+**Approach:** Implement KTD7/KTD11 authenticated content resolution, bounded validation, named clip revisions, and explicit unavailable states. Resolve complete originals independently of preview eligibility. Validate metadata outside transactions; recheck mutable revisions when committing corrections.
+**Patterns to follow:** U3 sourced assertions, U4 immutable manifests, U2 revision checks.
 **Test scenarios:**
-1. Covers AE11. Four frames at eight FPS yield 0.5 seconds; a second four-frame clip at ten FPS yields 0.4 seconds on the same sheet.
-2. Covers AE12. Missing timing or invalid geometry leaves still review available and playback unconfigured; supplied correction enables it with recorded source.
-3. Covers AE13. GIF variable delays/disposal, an explicitly ordered PNG sequence, and a still-only irregular atlas retain their distinct behavior.
-4. GIF absent/zero delay controls are not reported as a known positive encoded duration; decoder defaults remain identified as such.
-5. Covers AE14. Correct a clip's order/timing: current resolution changes, historical revision access and actual input references do not. U6 verifies the selected-clip case.
-6. Missing/corrupt content gives an explicit unavailable result while metadata/history remain retrievable; extreme decode requests stop at documented bounds.
-**Verification:** Inspect actual fixture bytes and metadata, then visually exercise their playback in U10; parser assertions alone do not prove displayed GIF frames.
+1. Covers AE11. Four-frame clips at eight and ten FPS report 0.5- and 0.4-second cycles on one sheet.
+2. Covers AE12. Missing timing/invalid geometry leaves still review and unconfigured playback; valid sourced description enables it.
+3. Covers AE13. Variable-delay/disposal GIF, explicitly ordered PNG sequence, and still-only irregular atlas retain their distinct behavior.
+4. Absent/zero GIF timing is not reported as a known positive encoded duration; corrupt later GIF frames and decode-budget excess cannot pass as validated media.
+5. Covers AE14. Correct playback: current revision changes, pinned input/history revision stays retrievable, stale correction fails without writes.
+6. Missing/corrupt stored content reports unavailable while metadata/history remain readable; opaque originals cannot execute on the application origin.
+**Verification:** Inspect real media bytes and metadata; U10 must additionally observe displayed frames and timing. Parser tests alone are insufficient.
 
 ### U6. Human-authorized creative decisions
 
-**Goal:** Persist independent per-slot review, selection, and human stage decisions without implicit transitions.
+**Goal:** Record explicit, independent review, selection, and stage decisions.
 **Requirements:** R8, R12–R20, R37–R40; F3.
 **Dependencies:** U2, U5.
-**Files:** `apps/server/src/decisions/decisions.module.ts`, `apps/server/src/decisions/decisions.service.ts`, `apps/server/src/decisions/decisions.controller.ts`, `packages/contracts/src/decisions.ts`, `apps/server/test/decisions.test.ts`.
-**Approach:** Implement KTD8 and pin the playback revision observed by every clip-targeted decision under KTD7. Treat rejection and its selection disposition as one command, not independent endpoints. Use the same services for later UI and MCP actions.
-**Patterns to follow:** U2 transactional revision checks and U5 stable clip targets.
+**Files:** New `apps/server/src/decisions/{decisions.module.ts,decisions.service.ts,decisions.controller.ts}`, `packages/contracts/src/decisions.ts`, `apps/server/test/decisions.test.ts`; existing error/module/contracts integration.
+**Approach:** Implement KTD7–KTD8 with one compound rejection command, observed playback revisions, and retained authority. Current selected-clip reads follow corrections without manufacturing a selection event.
+**Patterns to follow:** U2 transaction/conflict boundary; U5 stable clip and revision resolution.
 **Test scenarios:**
-1. Covers AE3. The same target approved in one slot and rejected in another retains independent decisions; multiple approvals coexist.
-2. Covers AE4. Exercise keep, clear, and replace for a rejected selection; missing disposition and replacement from another slot change nothing.
-3. Covers AE5. Reading media never marks reviewed; an agent decision without retained authority is refused.
-4. Covers AE8. Selecting G005 instead of G003 changes no descendant edges or decisions.
-5. Two concurrent UI/MCP decisions based on one revision produce one successful commit and one conflict, without a lost history entry.
-6. Covers AE14. Clip correction changes current selected playback but neither manufactures a selection event nor rewrites the original event's playback revision.
-7. A form observes clip revision 1, another interface creates revision 2, and the old decision is submitted: return a conflict and no event; only review-and-resubmit records revision 2.
-8. Place one target in slots belonging to different assets: ownership and lineage do not change, and each slot retains independent decisions.
-**Verification:** Drive atomic rejection and a concurrent conflict through the live API; retrieve before/after history and authority.
+1. Covers AE3. The same target has independent decisions in two slots; multiple approvals coexist with explicit no-selection.
+2. Covers AE4. Keep, clear, and replace work atomically; missing disposition or replacement from another slot changes nothing.
+3. Covers AE5. Reads/playback never record review; agent review/selection/stage without retained instruction is refused.
+4. Covers AE8. Replace/clear Concept selection without modifying descendant inputs, reviews, or selections.
+5. Concurrent UI/MCP commands from one revision yield one commit and one conflict; no authority/history/watermark leaks from the loser.
+6. Covers AE14. Selected clip correction changes current playback while earlier decision/input pins remain; a stale observed playback revision cannot be silently accepted.
+7. Cross-asset placement retains original ownership and slot-scoped decisions.
+**Verification:** Live API exercises demonstrate atomic rejection, conflict handling, authority history, and current-versus-historical selected playback.
 
 ### U7. Filters, search, lineage, and task context
 
-**Goal:** Retrieve decision-ready facts without hiding candidates or overstating historical completeness.
+**Goal:** Retrieve the facts needed to resume without hiding records or overstating completeness.
 **Requirements:** R5–R7, R20–R23, R30–R37; F4.
 **Dependencies:** U3, U4, U5, U6.
-**Files:** `apps/server/src/database/migrations/002-search.sql`, `apps/server/src/queries/queries.module.ts`, `apps/server/src/queries/search.service.ts`, `apps/server/src/queries/context.service.ts`, `apps/server/src/queries/queries.controller.ts`, `packages/contracts/src/queries.ts`, `apps/server/test/search.test.ts`, `apps/server/test/context.test.ts`.
-**Approach:** Implement KTD9 with one current search projection and revision-aware history search. Maintain the FTS index transactionally on insert/correction, with migration rebuild for preexisting rows. Context links to full claims, requests, exact media, ancestors/dependents, and decision history; it does not decide what artwork to use.
-**Patterns to follow:** SQLite FTS5 external-content index maintenance and recursive queries; U3's effective relationships.
+**Files:** New `apps/server/src/database/migrations/003-search.sql`, `apps/server/src/queries/{queries.module.ts,search.service.ts,context.service.ts,queries.controller.ts}`, `packages/contracts/src/queries.ts`, `apps/server/test/search.test.ts`, `apps/server/test/context.test.ts`; existing database registry, catalog list callers, and contracts exports.
+**Approach:** Implement KTD9, backfill current/history text, and register projection maintenance before serving mutations. Replace unbounded catalog lists with the shared bounded contract and migrate both clients. Preserve exact revision links, explicit gaps, and query-bound continuation.
+**Patterns to follow:** Existing mutation watermark and `addProjection`; U3 effective/historical relationships.
 **Test scenarios:**
-1. Covers AE6. Default browsing includes rejected/formerly selected candidates; each core filter and representative combinations return the expected identities.
-2. A changed prompt is searchable as current text; its old value remains findable only with the explicit historical scope and revision marker.
-3. Covers AE8. Descendant traversal finds W002/A006 through G003 after a selection change; missing history is reported, not bridged.
-4. Covers AE15. A context page includes every required category and explicit continuation for oversized notes/candidates/lineage; subsequent pages recover omitted records.
-5. A revision change invalidates an old cursor rather than yielding a mixed snapshot; equal timestamps do not duplicate or omit rows.
-6. Covers AE16. An unselected destination with explicitly supplied source is representable without auto-selection; ambiguous names return alternatives, not a guessed identity.
-7. Create and correct names, prompts, and nested metadata before the search migration; after migration/restart, current and history scopes return their respective revisions. Repeat after another mutation to verify all index-update paths.
-**Verification:** Query a real populated SQLite store after corrections and restart; retrieve an older branch entirely through public operations.
+1. Covers AE6. Default browse includes rejected/formerly selected work; each R22 filter and representative combinations return expected IDs.
+2. Corrected prompts/nested text are searchable as current; superseded values appear only in explicit historical scope with revision identity.
+3. Covers AE8. Multi-hop descendants remain reachable after reselection; gaps are returned rather than bridged.
+4. Covers AE15. Oversized notes/candidate/lineage collections retain every R5 category plus working continuation; following pages recovers omitted records.
+5. Watermark/query mismatch refuses continuation; equal timestamps do not duplicate or skip rows in a stable query.
+6. Covers AE16. Explicit source plus unselected destination is representable; ambiguous names return alternatives, never an inferred choice.
+7. Existing records are backfilled before search becomes available; correction/projection failure leaves records and index consistent after restart.
+**Verification:** Public queries reconstruct an older branch in a real populated store, including historical text, missing history, and interrupted pagination.
 
 ### U8. MCP parity and local-file streaming
 
-**Goal:** Let a fresh agent perform and inspect the same domain operations as the human interface.
+**Goal:** Give a fresh agent first-class access to the same durable operations and records.
 **Requirements:** R3–R11, R21–R23, R38, R41–R45; F1, F2, F4.
 **Dependencies:** U1, U7.
-**Files:** `apps/mcp/package.json`, `apps/mcp/src/main.ts`, `apps/mcp/src/client.ts`, `apps/mcp/src/tools.ts`, `apps/mcp/src/resources.ts`, `apps/mcp/src/capture-files.ts`, `apps/mcp/test/stdio.test.ts`, `apps/mcp/test/parity.test.ts`, `packages/contracts/src/index.ts`.
-**Approach:** Implement KTD10's operation matrix through the existing HTTP contracts. Retain exact error distinctions for authority, conflict, incomplete capture, unknown target, and unavailable service. Return artifact IDs and browser deep links after capture, with resource/media access for host review.
-**Patterns to follow:** MCP SDK v2 stdio and structured results; shared Zod contracts and Nest error envelope.
+**Files:** New `apps/mcp/package.json`, `apps/mcp/tsconfig.json`, `apps/mcp/src/{main.ts,client.ts,tools.ts,resources.ts,capture-files.ts}`, `apps/mcp/test/stdio.test.ts`, `apps/mcp/test/parity.test.ts`; existing root scripts/lockfile and shared contract exports.
+**Approach:** Implement KTD10 over public HTTP operations, not direct SQLite. Cover the Shared Operation Surface, errors, continuation, historical revisions, exact member reads, and bounded previews. Return IDs and browser deep links after capture; never infer a file read from recorded text.
+**Patterns to follow:** Existing profile-bound bridge discovery and credential rotation; shared strict contracts.
 **Test scenarios:**
-1. Launch the actual bridge against Nest, create/capture/read through MCP, and read the same IDs and history through HTTP.
-2. Service unavailable or restarted with rotated credentials produces an actionable error without a new database or phantom success.
-3. Covers AE5. Authorized agent decision is visible with its instruction; missing authority and stale revisions preserve state.
-4. Covers AE18. Missing local frame and incomplete streamed upload yield no complete artifact.
-5. Exact media bytes are retrievable through the supported tool/resource surface; bounded previews identify themselves rather than pretending to be originals.
-6. MCP initialization and error logging leave stdout valid protocol traffic only.
-**Verification:** Initialize from the actual OMP MCP host, exercise public tools/resources, and compare resulting records in the browser. Protocol-client tests do not replace host interoperability proof.
+1. Launch actual stdio bridge and Nest; create/request/capture/read via MCP and retrieve identical records/history via HTTP.
+2. Service missing/restarted or wrong profile yields actionable failure without another store or phantom success.
+3. Covers AE5. Authorized decisions retain instruction; missing authority and stale revisions preserve all state.
+4. Covers AE18. Missing local frame or interrupted upload yields no complete artifact; explicit receipt lookup recovers lost responses.
+5. Media tool/resource retrieves exact member bytes matching the stored digest; preview is labeled and cannot replace original access.
+6. Initialization, tool errors, and logs preserve stdout protocol purity; continuation and recorded malicious prompt text never become tool instructions.
+**Verification:** Initialize from the actual OMP MCP host and exercise tools/resources against Nest; inspect resulting records in the browser. A protocol-client test alone does not establish host interoperability.
 
 ### U9. Browser organization and capture
 
-**Goal:** Let the developer establish context, find work, and capture files without agent assistance.
-**Requirements:** R2–R4, R13, R15, R20–R24, R28–R31, R41, R43; F2, F4.
+**Goal:** Make local organization, discovery, and import usable through the approved workbench.
+**Requirements:** R2–R4, R13, R15, R20–R24, R28–R31, R41, R43, R47–R48; F2, F4, AE19.
 **Dependencies:** U4, U7.
-**Files:** `apps/web/src/lib/api/client.ts`, `apps/web/src/lib/api/navigation.ts`, `apps/web/src/features/catalog/ProjectBrowser.svelte`, `apps/web/src/features/catalog/AssetBrowser.svelte`, `apps/web/src/features/catalog/AssetDetail.svelte`, `apps/web/src/features/capture/CaptureForm.svelte`, `apps/web/src/lib/components/FilterBar.svelte`, `apps/web/src/lib/capture-manifest.ts`, `apps/web/src/lib/capture-manifest.test.ts`.
-**Approach:** Build stable-ID navigation, editable names/notes/slots, complete core filters, full-text/history scope, and unslotted browsing. File input/drop sends bytes with explicit context; sequence UI lets the human confirm and reorder the full member list before capture. Display success only from a committed receipt.
-**Patterns to follow:** Svelte 5 components and the shared contracts; use server records rather than a second client domain store.
+**Files:** Existing `apps/web/src/App.svelte`; new `apps/web/src/lib/api/{client.ts,navigation.ts}`, `apps/web/src/lib/components/{WorkbenchShell.svelte,FilterBar.svelte}`, `apps/web/src/lib/styles/tokens.css`, `apps/web/src/features/catalog/{ProjectBrowser.svelte,AssetBrowser.svelte,AssetDetail.svelte,CandidateGrid.svelte}`, `apps/web/src/features/capture/CaptureForm.svelte`, `apps/web/src/lib/capture-manifest.ts`, `apps/web/src/lib/capture-manifest.test.ts`, `apps/web/src/lib/navigation.test.ts`; existing web/root test integration.
+**Approach:**
+1. Implement KTD13 shell/tokens, stable-ID navigation, desktop columns, and narrow drawer/disclosure without fictional catalog fixtures.
+2. Add editable project/asset notes, named slots, candidate placement, all core filters, search/history scope, and unslotted browsing.
+3. Send explicit context and ordered file manifests to U4; present success only from a committed receipt, retaining the operation ID for deliberate recovery.
+4. Preserve pairing and intended return links, form input on errors, and clear loading/empty/unavailable states.
+**Patterns to follow:** Existing Svelte pairing/API boundary; accepted prototype composition and visual treatment under R47–R48, not its sample data or disabled functionality.
 **Test scenarios:**
-1. Manifest construction preserves an explicit nonlexical frame order and refuses missing/duplicate member identities before submission.
-2. Manual browser scenario: create a project/asset, import unslotted artwork, remove its original, restart, and retrieve the same captured result.
-3. Manual browser scenario: every filter remains findable, rejected candidates stay visible by default, and duplicate asset names show project context.
-4. Manual browser scenario: an interrupted upload shows failure rather than a candidate card, and refreshing does not repeat a capture silently.
-**Verification:** Exercise the actual browser with no generator configured; inspect the visual surface, navigation, selected files, and resulting records. Keep browser automation disposable unless a concrete uncertain behavior warrants a permanent regression test.
+1. Manifest construction preserves nonlexical order and rejects missing/duplicate members; navigation state returns from a viewed target to the same slot/filter without encoding a creative mutation.
+2. Covers AE1 / AE2 / AE10. Browser creates context, imports unslotted artwork, survives deletion of the original and service restart, and displays explicit missing provenance.
+3. Every core filter is findable; default candidates include rejected work and duplicate asset names retain project context.
+4. Interrupted capture never creates a success card; refresh does not silently repeat capture, and receipt recovery uses the original operation.
+5. Manual desktop/narrow checks exercise both themes, keyboard drawer dismissal/focus return, details disclosure, and no page-level horizontal overflow.
+**Verification:** Use the actual built browser with no generator configured and real records. Capture visual evidence of grid, navigation, import, and empty/error states; keep browser automation disposable unless it exposes an uncertain behavior worth a regression test.
 
 ### U10. Browser review, playback, and correction
 
-**Goal:** Review and compare artwork, record decisions, and inspect/correct history from one coherent asset view.
-**Requirements:** R8, R12, R14, R16–R27, R30–R40; F3, F4.
+**Goal:** Open artwork as the focus while retaining context and explicit decision/history controls.
+**Requirements:** R8, R12, R14, R16–R27, R30–R40, R47–R48; F3, F4, AE19.
 **Dependencies:** U5, U6, U7, U9.
-**Files:** `apps/web/src/features/review/ArtifactInspector.svelte`, `apps/web/src/features/review/MediaViewer.svelte`, `apps/web/src/features/review/ClipEditor.svelte`, `apps/web/src/features/review/DecisionPanel.svelte`, `apps/web/src/features/review/CompareView.svelte`, `apps/web/src/features/review/HistoryPanel.svelte`, `apps/web/src/features/review/RequestPanel.svelte`, `apps/web/src/lib/playback.ts`, `apps/web/src/lib/playback.test.ts`.
-**Approach:** Compose image/animation review, side-by-side alternatives, sourced facts, exact inputs/dependents, request outcomes, correction forms, and explicit creative actions. Implement regular-grid/sequence scheduling under KTD11; original GIF display remains browser-decoded. Distinguish current corrected clips from historical decision/input revisions in the inspector.
-**Patterns to follow:** U9 shared API client and conflict handling; R21 defines accessible review facts.
+**Files:** New `apps/web/src/features/review/{ReviewWorkspace.svelte,ArtifactInspector.svelte,AlternativesFilmstrip.svelte,MediaViewer.svelte,ClipEditor.svelte,DecisionPanel.svelte,HistoryPanel.svelte,RequestPanel.svelte}`, `apps/web/src/lib/playback.ts`, `apps/web/src/lib/playback.test.ts`; existing U9 shell/navigation/client.
+**Approach:** Replace the grid center with large viewer and alternatives under KTD13; keep record inspector and slot context available. Add sourced facts, inputs/dependents, current/historical views, request/outcome forms, correction forms, stage/review/selection actions, and U5 playback. Use the filmstrip and opened artwork for comparison rather than introducing another top-level layout.
+**Patterns to follow:** U9 tokens, navigation, forms, conflict handling; U5 revision-keyed media resolution.
 **Test scenarios:**
-1. Playback schedule uses cumulative variable durations and explicit order; invalid/missing timing does not become invented FPS.
-2. Manual browser scenario covering AE3–AE5: independent slot decisions, multiple approvals, unreviewed viewing, and reject keep/clear/replace.
-3. Manual browser scenario covering AE11–AE13: visually compare two named clips, GIF disposal/timing fixtures, explicit sequence order, and unconfigured/irregular still views.
-4. Manual browser scenario covering AE14: correct selected clip timing; current playback changes while a prior decision and actual-input link open the original revision.
-5. Manual browser scenario: inspect known/unknown/absent provenance, correct an input, and follow both effective and historical lineage without a stale-artwork label.
-6. Manual browser scenario: an MCP mutation during an open decision form produces a visible conflict and preserves the unsent human choice.
-7. Manual browser scenario: HTML/script strings in names, prompts, filenames, history, and search remain inert text; opaque original downloads cannot execute on the application origin.
-**Verification:** Capture visual evidence of actual media frames and decision controls. Exercise keyboard access, labels, loading/empty/error states, and readable provenance/history on the working UI.
+1. Playback scheduling respects recorded nonlexical order and variable cumulative durations; missing/invalid timing never invents FPS.
+2. Covers AE19. Open approved A004 from filtered Knight/Attack while A006 is selected; inspect facts/inputs/history, switch alternatives, return with same slot/filter, and verify no review/selection event.
+3. Covers AE3–AE5. Browser records independent slot decisions, multiple approvals, explicit no-selection, reviewed-undecided, and reject keep/clear/replace.
+4. Covers AE11–AE13. Observe both named clips, GIF disposal/timing, ordered sequence, and unconfigured/irregular still views; six prototype crops are never playback fixtures.
+5. Covers AE14. Correct selected clip timing: current playback changes while previous decision and actual-input links open the pinned revision.
+6. Correct sourced facts/input roles and traverse effective/historical lineage; request unknown/failed/cancelled outcomes stay distinct from capture.
+7. An MCP change during a form yields conflict with unsent input preserved; filtered-out viewed artwork and unavailable content have explicit states.
+8. Recorded HTML/script strings remain inert; both themes and desktop/narrow layouts retain textual viewed/selected/review cues, focus visibility, accessible controls, and inspector access.
+**Verification:** Actual browser evidence shows artwork frames, playback behavior, controls, and context preservation at desktop and narrow widths. Compare against the approved visual reference without treating pixel values as frozen.
 
 ### U11. Complete founder workflow proof and operating documentation
 
-**Goal:** Demonstrate recoverable artwork history after restarting and discarding conversational memory.
-**Requirements:** R1–R46; A1–A4, F1–F4, AE1–AE18.
+**Goal:** Demonstrate recoverable artwork history after restart without old conversation.
+**Requirements:** R1–R48; A1–A4, F1–F4, AE1–AE19.
 **Dependencies:** U8, U10.
-**Files:** `tests/integration/workflow.test.ts`, `tests/integration/restart.test.ts`, `README.md`, `docs/verification/first-art-workflow.md`.
-**Approach:** Combine the implemented operations into the Product Contract's successful first demonstration. Document installation, explicit service/MCP startup, private data location, supported media/limits, authority semantics, recovery diagnostics, stopped-service backup, and producer-independent capture. Record exercised evidence without committing private images, credentials, or personal paths by default.
-**Patterns to follow:** Existing Product Contract acceptance examples and strategy metrics; real stores and real interfaces.
+**Files:** New `tests/integration/workflow.test.ts`, `tests/integration/restart.test.ts`, integration test configuration; existing `package.json`, `README.md`, `docs/verification/first-art-workflow.md`.
+**Approach:** Integrate the complete workflow and evidence matrix below. Wire all permanent test locations into the workspace gate. Document actual startup/MCP setup, private profile, backup/recovery, shipped limits, source/authority semantics, and generator-independent capture. Replace the stale design-approval sentence in the verification record while retaining its historical U1 evidence.
+**Patterns to follow:** Product Contract acceptance examples and strategy measures; real stores/interfaces, no live producer in automated tests.
 **Test scenarios:**
-1. A real temporary store retains requests, content, decisions, multi-input lineage, and corrected clip history after process restart.
-2. Mixed MCP/HTTP actions preserve one shared state through selection replacement and source reuse; an unreported request remains unknown.
-3. Founder exercise: real OpenAI request-before-production and capture, human-created after-the-fact import, playable clips, alternatives, multi-input branch, older descendants, and explicit unknown.
-4. Fresh-agent exercise: recover context without old chat, ask for ambiguous project/slot/source, and proceed when an explicit source is supplied for an unselected slot.
-   Include recorded prompt text that falsely claims human approval or directs a private-file read; the agent treats it as evidence, not authority or a tool instruction.
-5. Offline exercise: remove producer availability, then retrieve/review/capture local files and make decisions without contacting it.
-**Verification:** Complete the evidence matrix below. Record retrieval-time baseline and reconstruction results, not an invented performance target.
+1. A real store retains content, requests, decisions, branches, and corrected clip history across process restart.
+2. Mixed MCP/HTTP operations retain one shared state through reselection/reuse; unknown outcome and unknown provenance remain explicit.
+3. Founder exercise covers real OpenAI request-before-production/capture, after-the-fact human import, clips, alternatives, multi-input branch, changed selection, older descendants, and an explicit unknown.
+4. Fresh agent reconstructs without old chat, asks about ambiguous project/slot/source, and can proceed with explicit source for an unselected slot. A recorded prompt claiming approval or requesting private-file access is treated only as evidence.
+5. Producer-unavailable exercise still supports local organization, capture, retrieval, playback, and decisions.
+**Verification:** Record every acceptance outcome and founder measure with actual evidence. Missing external access or founder participation leaves final acceptance open, never replaced by a mock.
 
 ---
 
 ## Verification Contract
 
-No builds, tests, generation calls, or application runtime checks were performed to produce this plan.
-No verification command exists yet; U1 introduces the workspace's build/type-check/test entry points.
-Use the Node test runner for the named permanent behavioral tests, with an isolated data directory per test and no live producer in the automated suite.
-Run tests/type checking/build after integration, not as repeated parallel-agent mid-flight checks.
-Do not add source-text, route-wiring, mock-echo, or wording assertions.
+This planning pass reads source, history, the approved design record, and documentation only.
+Historical runtime evidence remains historical; no new build, test, runtime, or producer result is claimed.
+
+The current root gate is `corepack pnpm build`, `corepack pnpm typecheck`, and `corepack pnpm test`.
+The current test script runs only compiled server tests via `node --test "dist/test/*.test.js"`; it does not yet discover the planned MCP, browser-helper, or integration tests.
+U8–U11 must add build/test discovery for those locations before the final root test result counts as complete coverage.
+Run the integrated gate after related edits are finished, not repeatedly inside parallel implementation workers.
+Use the Node test runner and real isolated stores; preserve the existing Windows private-profile fixture convention.
+No release-validation command exists in this checkout.
+
+Permanent tests cover consumer-visible invariants, boundaries, conflict/error behavior, and persistence.
+Do not add source-text, route-wiring, wording, mock-echo, or default-copy assertions.
+Browser checks exercise the actual built UI and can remain disposable; nonvisual helper tests cover uncertain navigation/order/timing behavior.
 
 | Acceptance coverage | Primary proof | Required observable result |
 | --- | --- | --- |
-| AE1–AE2, AE10, AE18 | U4 capture/recovery tests plus U9 live browser | Exact original bytes survive external changes; incomplete content never appears as a successful artifact. |
-| AE3–AE5 | U6 real-database transitions plus U8/U10 live interfaces | Independent per-slot decisions, explicit authority, atomic selected-candidate rejection, and no view-triggered review. |
-| AE6–AE8 | U3/U7 persisted queries plus U10 inspector | Fact filters, old/rejected branches, multi-input roles, and unchanged descendant decisions after reselection. |
-| AE9, AE16 | U3 request tests and U8 fresh context | Unknown outcome and proposed/actual inputs remain distinct; explicit source works without slot selection. |
-| AE11–AE14 | U5 metadata/revision tests plus U10 visual playback | Correct clip timing/order, preserved GIF behavior, still-only unsupported playback, and recoverable historical clip revisions. |
-| AE15 | Actual fresh agent through MCP after restart | Required context can be recovered and ambiguity is raised before production, with continuation used where necessary. |
-| AE17 | Real authorized OpenAI tool, MCP capture, browser review | Retained pre-production request and actual captured image/context, with no invented settings or automatic decision. |
-| Local trust boundary | U1/U4 actual listener and browser checks | Foreign web origin, invalid credentials, unsafe paths, and unauthenticated media cannot access private content. |
-| End-to-end continuity | U11 founder exercise | Strategy measures recorded against local facts, including elapsed retrieval time and truthful unknowns. |
+| AE1–AE2, AE10, AE18 | U4 real-file/recovery tests and U9 browser | Original bytes remain available; missing represented content never becomes successful capture. |
+| AE3–AE5 | U6 database transitions, U8/U10 actual interfaces | Independent decisions, authority retained, atomic rejection, no review by viewing. |
+| AE6–AE8 | U3/U7 persisted queries and U10 inspector | Fact filters, reusable older/rejected branches, multi-input roles, no descendant changes from reselection. |
+| AE9, AE16 | U3 requests and U8 context | Proposed/actual inputs and reported/unknown outcomes remain distinct; explicit source needs no selection. |
+| AE11–AE14 | U5 revision/media tests and U10 visual playback | Correct order/timing, preserved GIF behavior, truthful unconfigured playback, historical clip resolution. |
+| AE15 | Fresh agent through actual MCP after restart | Required context and continuation recover facts; ambiguous identity/input leads to clarification before production. |
+| AE17 | Authorized external OpenAI tool, MCP capture, browser | Real request precedes real generation; exact image/context captured without invented settings or decisions. |
+| AE19 | U9/U10 browser in both themes, desktop/narrow | Filtered grid to viewer/filmstrip and back preserves context and leaves selection/review unchanged. |
+| Local boundary and upgrade | U1/U2/U4 actual listener, private store, populated migration | Unauthorized access refused before upload work; existing records survive upgrades and failed writes. |
+| Complete continuity | U11 founder exercise | Asset-state clarity, timed retrieval baseline, and reconstruction results measured against local facts. |
 
-The local quality gate requires the production build, type checks, relevant behavioral tests, actual MCP-host initialization, and visual browser exercises.
-A passing automated suite alone does not satisfy the media, fresh-agent, or live-producer rows.
-If OpenAI credentials or founder participation are unavailable, finish all local implementation and report that acceptance prerequisite explicitly; do not call the complete workflow verified.
+For AE19, inspect desktop at 1440px and 1280px and narrow at 390px as reference checks, not the only supported widths.
+Verify navigation drawer focus/dismissal, inspector access, readable text/focus/control contrast in both themes, image Fit/1:1 behavior, and absence of page-level overflow.
+No prototype record, screenshot, or six-crop image establishes production acceptance.
+
+The local quality gate includes production build, typecheck, discovered behavioral tests, actual MCP-host initialization, service restart, and browser/media exercises.
+A passing suite cannot replace visual playback, fresh-agent behavior, live OpenAI capture, or founder measures.
+If an external prerequisite is missing, finish all reachable local work and name the unexercised acceptance rows.
 
 ---
 
 ## Definition of Done
 
-- The Product Contract is implemented end to end, with every required acceptance outcome observed through its designated proof.
-- NestJS remains the backend; UI and MCP share application services and durable records rather than divergent rule implementations.
-- Each U-ID's behavioral tests and runtime verification are satisfied, or an external acceptance prerequisite is explicitly reported as still blocking completion.
-- The founder can return after restart, inspect the selected result's actual production history, and direct another iteration without old chats or unrelated folders.
-- Local use works without OpenAI; the separate live OpenAI round trip has also been exercised for final acceptance.
-- Current corrections and immutable history agree with R39–R40, including the selected-clip clarification.
-- Operating documentation matches the actual startup, data-store, security, media, and recovery behavior.
-- Temporary probes and abandoned implementation attempts are removed; no mock producer, placeholder screen, no-op command, or unused compatibility layer substitutes for required behavior.
-- No artwork, credentials, local database, personal paths, remote publication, or user-global configuration changes are included without explicit authorization.
+- R1–R48 are implemented end to end and every AE1–AE19 outcome has its designated observed proof.
+- Existing runtime/catalog work and data survive the cutover; no reset, duplicate domain store, or compatibility shim substitutes for migration.
+- Each unit's relevant behavioral scenarios and runtime proof hold; UI and MCP share Nest services and durable history.
+- The approved compact workbench supports actual browsing/review on desktop and narrow screens, with viewed record, selection, and review distinct.
+- A developer and fresh agent can resume from recorded facts after restart, including exact historical playback and explicit missing history.
+- Local use works without a producer; final acceptance also includes the separate real OpenAI round trip and founder measurements.
+- All new permanent tests are reached by documented workspace commands; operating documentation matches actual behavior and limits.
+- Temporary probes and abandoned attempts are removed; no placeholders, fake producer, fictional catalog fixture, or unavailable action presented as functional remains in the delivered workflow.
+- No private artwork, credentials, database, personal paths, remote publication, or user-global configuration changes are included without explicit authorization.
