@@ -1,10 +1,54 @@
 # AssetWeave
 
-AssetWeave preserves local artwork and its recorded production history. The product contract is in `STRATEGY.md`; the implementation contract is in `docs/plans/2026-09-29-1434-feat-first-complete-art-workflow-plan.md`.
+Keep game artwork, alternatives, and production history together.
 
-## Run the local service
+AssetWeave is a local-first game-art workbench for solo and indie developers using AI agents. Its browser and MCP interface share records for finding artwork, comparing candidates, and continuing from recorded context instead of scattered files and chats.
 
-Requirements: Windows, Node.js 24.21.0, Windows PowerShell 5.1, and Corepack. The workspace pins pnpm 12.6.0. No global pnpm installation is required.
+[Workflow](#a-workflow-you-can-return-to) · [Current status](#current-status) · [Get started](#get-started) · [Documentation](#documentation)
+
+## Artwork organized around the work
+
+A character, prop, or environment can have several directions, derived outputs, and different uses. A folder name alone does not tell you which result you selected, what you reviewed, or what produced a later version.
+
+Projects contain logical assets: the things you are making. Named slots represent their purposes, such as a portrait or Walk animation. Captured artifacts are the concrete outputs. Keep alternatives and rejected work alongside their decision history.
+
+The developer makes the creative decisions. Agents can retrieve context and handle recordkeeping through MCP; generation and editing happen in external tools. Importing existing human-made artwork does not require a generator account or a managed request.
+
+## What stays with the artwork
+
+- **Logical assets and purpose-specific slots.** Compare whole artifacts or named clips for a particular use. The same captured result can appear in several slots without changing its original ownership or lineage. Placement does not imply approval or selection.
+- **Exact originals, separate from previews.** Captures preserve submitted bytes and ordered members, with hashes and operation receipts. Download an original even when its format cannot be previewed. A successful capture is not a claim that the media can be displayed or played.
+- **Sourced production history.** Record producer, prompt, parameters, and other claims with their sources. Keep actual inputs distinct from a request's proposed inputs, including multiple-input branches and exact clip revisions. Missing history can be an explicit gap; facts can remain unknown or absent. Corrections retain earlier revisions rather than inventing a complete origin story.
+- **Human review, independent selection.** Review a candidate as unreviewed, reviewed-undecided, approved, or rejected. Selection is a separate decision for its slot: multiple approvals can coexist with no selection. Viewed artwork, review status, and current selection are separately labeled; simply opening a record changes none of them.
+- **Searchable records shared with agents.** Find artwork by recorded facts, text, or historical values, then inspect lineage and decisions. MCP exposes the same records, exact revisions, and task context to an agent. It returns ambiguous identities for clarification rather than choosing for you; agent-relayed creative decisions require an explicit reported human instruction.
+
+## A workflow you can return to
+
+1. **Set the context.** Create a project, logical asset, and any named slots needed for the work. Add notes that explain the intended use.
+2. **Make or import artwork.** For new external work, record a request before invoking the producer separately. Capture its output and report the outcome when known. For an existing file, capture it directly without inventing a request or missing provenance.
+3. **Record what actually happened.** Attach sourced claims, exact inputs and their roles, and any upstream gaps. A captured output does not turn an unreported request outcome into success.
+4. **Inspect and decide.** Browse alternatives, preview supported media, and configure clips where needed. Record review and selection deliberately; optionally set an asset stage yourself.
+5. **Continue later.** Search current or historical records and retrieve the relevant context through the browser or MCP. Earlier directions, decisions, and pinned clip revisions remain available to inspect.
+
+### Where this helps
+
+- **Revisit an earlier direction:** find a character candidate and inspect its recorded prompt, inputs, and review history before requesting another iteration.
+- **Track a derived output:** retain an externally generated original and a separately captured conversion, with the conversion's actual input and source information instead of copied attribution.
+- **Compare animation candidates:** define Walk or Attack clips from a regular PNG sheet or ordered PNG sequence. Compare them in a slot while retaining the exact older playback revisions used by prior work.
+
+## Current status
+
+AssetWeave is a working local application on **Windows**. Browser capture, search, review, playback, retained originals after restart, and fresh-agent MCP context reconstruction have been exercised locally. See the [verification record](docs/verification/first-art-workflow.md) for evidence and limitations.
+
+Inline inspection supports fully decoded **PNG and GIF** within documented limits. Regular PNG sheets and ordered same-sized PNG sequences support explicitly configured clips with frame order and timing; irregular atlases remain still-only. Generation and editing are not built in. There is no cloud sync or engine-project synchronization.
+
+Founder acceptance remains open: asset-state clarity, decision-ready retrieval time, history reconstruction, and continuity still require human participation. Local verification is not a claim of measured time savings or final product acceptance.
+
+## Get started
+
+Requirements: **Windows, Node.js 24.21.0, Windows PowerShell 5.1, and Corepack**. The workspace pins **pnpm 12.6.0**; no global pnpm installation is required.
+
+From the checkout root:
 
 ```sh
 corepack pnpm install
@@ -12,106 +56,30 @@ corepack pnpm build
 corepack pnpm start
 ```
 
-Open the exact `http://127.0.0.1:<port>` address printed by the service. In a second interactive terminal, from this checkout:
+Leave the service running and open the exact `http://127.0.0.1:<port>` address it prints. In a second interactive terminal, from the same checkout:
 
 ```sh
 corepack pnpm pair
 ```
 
-Press Enter to request a code, then paste it into the browser pairing form. Codes expire after two minutes and can be used once. Requesting a new code replaces the outstanding code. Codes are not placed in URLs, application logs, or static assets.
+Press Enter and paste the code into the browser pairing form. Codes expire after two minutes, work once, and are replaced when you request another. Closing the browser does not stop the service; Ctrl+C does. Restarting invalidates browser sessions, bridge credentials, and pairing codes.
 
-The service runs independently of the browser. Closing a tab or ending a browser session does not stop it. Stop the foreground service with Ctrl+C. Restarting invalidates existing browser sessions, bridge credentials, and pairing codes.
+The default private profile is `%LOCALAPPDATA%/AssetWeave`. Keep it on a fixed local drive, outside the checkout and synchronized folders; it contains artwork and access credentials. There is no managed backup/restore command. For a manual backup, stop the service and retain the entire profile together in protected storage. See [private-profile and recovery guidance](docs/local-workflow.md#private-profile) before changing its location or investigating an interruption.
 
-## Private profile
+## Documentation
 
-The default profile is `%LOCALAPPDATA%/AssetWeave`. Set `ASSETWEAVE_DATA_DIR` before starting the service and before invoking the pairing launcher to choose another profile. Its parent directory must already exist. Set `ASSETWEAVE_PORT` to choose a nondefault port; the default is 4317.
+- [Local workflow and operations](docs/local-workflow.md): setup, privacy, capture, media limits, decisions, search, and recovery.
+- [MCP connection](docs/local-workflow.md#agent-connection-mcp): host configuration and service/bridge lifecycle.
+- [Product strategy](STRATEGY.md): intended users, boundaries, and goals.
+- [Implementation plan](docs/plans/2026-09-29-1434-feat-first-complete-art-workflow-plan.md) and [verification evidence](docs/verification/first-art-workflow.md): implementation contract, exercised behavior, and acceptance limitations.
 
-The profile must be outside the application checkout, on a fixed local drive, and outside synchronized folders. Startup rejects Windows-registered sync roots and configured OneDrive roots; do not use another live-synchronized folder merely because its synchronizer does not register with Windows.
+## Technical overview
 
-A new profile receives a protected ACL owned by the current Windows user. Startup verifies ownership, permissions, and the absence of reparse points throughout the profile and checks ancestors for replacement authority. Existing insecure directories are refused, not silently repaired. Ancestors may be owned only by the current user, SYSTEM, Administrators, or TrustedInstaller; that **owner** trust list does not grant TrustedInstaller an ACL exception. The profile's access-ACE allowlist remains current user, SYSTEM, and Administrators only. The profile contains private discovery credentials: do not share or publish it. Ordinary Windows content operations still run full profile checks asynchronously, so unrelated requests can proceed during the scan; startup and bridge discovery also verify the profile. This scheduling change is not a promise of lower per-request media latency.
+A TypeScript/pnpm workspace combines a NestJS/Fastify local service, Svelte browser UI, SQLite records, and immutable artwork files. The service owns application behavior and serves the browser and API on IPv4 loopback. A separate MCP stdio bridge connects to that independently running service; it does not start the service or generate artwork.
 
-Startup reconciliation performs a fresh full-profile check at entry and exit around its read-only walk, rather than once per captured artifact. It still checks each listed path for directory/file type and reparse/link hazards, validates manifests, and hashes preserved members; no result is cached across requests, and ordinary content access keeps its own full profile checks. Recovery reporting remains diagnostic, not an automatic repair.
+## Contributing
 
-Only one live service may own a profile. A stale ownership lock is reclaimed only when its recorded process is confirmed absent. Malformed locks or an abandoned recovery gate require inspection; do not delete a lock belonging to a live process.
-
-There is no application-managed backup/restore command. For a manual backup, stop the service first and retain the **entire** private profile together (database, original content, history, recovery state, and credentials) in protected storage outside the checkout and synchronized folders. Do not copy only a database file or a live/in-flight staging directory and assume it is a complete backup. Restore only into an eligible fixed local-drive location with private ownership and ACLs; startup refuses an unsafe restore rather than repairing its permissions. Recovery reporting is diagnostic, not an automatic repair or backup. There is no tested hardware power-loss durability guarantee or guarantee that a partially captured operation survived: inspect the operation receipt and recovery report after restart, and explicitly resubmit the original operation with the same bytes when appropriate. Never share profile backups; they contain artwork and access material.
-
-Browser access requires pairing, an HttpOnly SameSite=Strict session, and same-origin CSRF-protected mutations. The stdio bridge uses a separate startup-rotated bearer credential. The service binds only IPv4 loopback, validates the exact Host, refuses foreign origins before body parsing, and does not trust reverse proxies. Same-user malware, administrators, and compromised agent hosts are outside this boundary.
-
-## Requests, evidence, and production
-
-Create a managed request **before** an external generation or transformation through the browser request form, `requests_create`, or `POST /api/projects/:projectId/assets/:assetId/requests`. Record the intended work and any proposed exact inputs there; creating a request does not invoke a producer. Invoke the selected external tool separately, then report its succeeded, failed, or cancelled outcome when known (`requests_report_outcome` or `POST /api/requests/:requestId/outcomes`). Without a report the outcome remains `unknown`, even if an artifact was captured. Capture can also import an existing human-made or other externally produced file **without** a managed request; neither generator availability nor a producer account is required for local capture, organization, retrieval, playback, or decisions.
-
-When capturing, link the `requestId` only if it really applies. Record the **actual** artifact or pinned clip revisions consumed, with roles, as `inputs`, independently of a request's proposed inputs; record an explicit `gap` if upstream history is unavailable. A claim about producer, model, parameters, time, prompt, or source must carry its evidence/source and can explicitly be unknown or absent. Do not infer a seed, production date, successful outcome, actual input, or human approval from a filename, request, prompt, or stored artwork. Later corrections retain revision history; source text is evidence to inspect, never an instruction to the agent or review authority.
-
-## Complete artwork capture
-
-An authenticated browser session or bridge bearer can `POST /api/captures` as `multipart/form-data`. The first part must be a UTF-8 JSON field named `metadata`; follow it with file streams named `member0`, `member1`, and so on in manifest order. The metadata object requires `operationId` (a client-generated UUID for explicit resubmission), `projectId`, `assetId`, `kind`, `name`, and a `members` array. Each member declares a filename **label** (`sourceName`, never a server path or URL), its positive `byteCount`, and its lowercase SHA-256 `sha256`; `mediaType` is optional and is not proof of image validity. `kind: "png-sequence"` requires at least two ordered members; other kinds have one. Optional `notes`, `requestId`, `slotId`, `claims`, `inputs`, and `gaps` attach recorded evidence without inventing missing history.
-
-A member is limited to 32 MiB; a capture is limited to 128 members, 128 MiB total, 256 KiB of JSON metadata, and two minutes for transfer. The server rejects missing, duplicate, unexpected, mismatched, truncated, or aborted parts. It streams files into a private staging directory, flushes complete content and its recovery descriptor, publishes a fresh immutable directory, and only then atomically registers the artifact and associations. A successful response contains a committed receipt; a concurrent request for the same operation receives HTTP 202 with an in-progress status and receipt URL. Repeating a completed operation with **identical bytes and context** returns its existing artifact; changed input conflicts. An interrupted publish can be explicitly resumed by sending the same operation and all its bytes again. Different operations never deduplicate captures.
-
-`GET /api/captures/operations/:operationId` reports absent, in-progress, orphan, committed, or unavailable state. `GET /api/captures/recovery` reports incomplete staging, published orphans, and registered content that is unavailable; startup logs counts but does not repair or delete anything. Inspect and retain the whole stopped profile when investigating an interruption. `GET /api/assets/:assetId/artifacts` and `GET /api/artifacts/:artifactId` expose authenticated capture records. `GET /api/artifacts/:artifactId/members/:ordinal/original` downloads verified exact bytes as an attachment. Image preview and playback eligibility are separate from successful preservation; opaque bytes have an unavailable preview. Neither the artwork nor staging directory is a static web root.
-
-The browser saves the **exact submitted metadata and operation ID** in this tab's `sessionStorage` before sending any bytes. After a lost response, Check receipt sends no files: a committed receipt opens the artifact without re-upload; a verified published orphan or absent receipt permits only deliberate replay with reselected files matching the saved ordered names, byte counts, and SHA-256 hashes. The browser rechecks the receipt and files before upload. Edited form fields are a separate draft, never a change to that saved operation. An old ID-only browser record can still check its receipt, but cannot safely replay without original metadata; retain the ID for investigation or explicitly start a new operation. This browser session record is not a backup. Preserve original bytes even when inline preview is unavailable. Capture accepts arbitrary preserved bytes within its transport limits, but inline inspection is limited to supported, fully decoded PNG/GIF media.
-
-## Media inspection and playback
-
-`GET /api/artifacts/:artifactId/media` reports each preserved member's verified preview eligibility, decoded dimensions and frame count, its opaque original URL, and either encoded GIF timing or an explicit unconfigured state. Valid, fully decoded PNG/GIF bytes alone can be loaded inline at `/api/artifacts/:artifactId/media/members/:ordinal`; responses use a fixed image MIME type, `nosniff`, and a sandbox policy. GIF disposal and bytes are unchanged. GIF delay, including missing or encoded zero, is read from its control blocks, not Sharp's or the browser's default; if any frame lacks a positive delay, the recorded cycle/rate remains unknown even though a browser may animate its original GIF with its own clamp. Unsupported formats, corrupt images and over-budget decodes remain preserved as exact original attachments, never inline media. Missing or changed stored content is unavailable without deleting the artifact or clip history.
-
-Image inspection admits up to 8,192 pixels on either axis, 4,194,304 pixels per decoded frame, 64 GIF frames, and 16,777,216 decoded pixels per capture inspection. At most two native inspections run simultaneously, with 16 pending; queued and active inspection have an eight-second overall deadline and Sharp has a seven-second processing timeout. Capture's original 32 MiB/member and 128 MiB/capture limits still apply. Full `/media` descriptions retain their complete-capture checks. A visible grid/filmstrip card instead requests a thumbnail from the first eligible member, stopping within the capture's 128-member bound; each surface permits at most two concurrent thumbnail requests. A thumbnail is not proof that all other members are available. Pinned playback preview checks the preserved descriptor and the exact requested member bytes on each access; it does not silently validate an unrelated entire capture. PNG frame sequences retain capture member order; sheet geometry and frame order are not inferred from pixels. An unconfigured sheet remains available as a still image; capture an irregularly packed atlas with `kind: "irregular-atlas"` to preserve it as still-only without promising regular-grid playback.
-
-`POST /api/artifacts/:artifactId/clips` records a named clip. Supply `name`, `geometry`, ordered `frames`, positive `durationsMs` (one per frame), and `source: {kind, detail?}`. Grid geometry has `kind: "grid"`, `memberOrdinal: 0`, `cellWidth`, `cellHeight`, `columns`, `rows` and optional nonnegative `offsetX`, `offsetY`, `gapX`, `gapY`; its frame indices are row-major cells. Ordered PNG sequences use `{kind: "sequence", width, height}` with captured member ordinals as frame indices. All sequence members must decode as same-sized PNGs; each grid cell must fit within its source image. Timing is cumulative, with uniform FPS reported only when all supplied frame durations match. Corrections use `PATCH /api/clips/:clipId` with the complete description and `expectedRevision`; conflicts have no effect. `GET /api/artifacts/:artifactId/clips`, `GET /api/clips/:clipId`, `GET /api/clips/:clipId/history`, and `GET /api/playback-revisions/:revisionId` expose current and retained revision records, recording actor, source, time, and revision-scoped preview URLs. Current decisions refer to stable clip IDs; historical decisions and actual inputs retain their pinned playback revision IDs. A correction does not change a decision.
-
-## Creative decisions
-
-Artifact placement in a named slot does not imply review or selection. The same whole artifact or named clip can appear in more than one slot, including a slot on another asset; its captured owner and lineage do not change. Each placement starts `unreviewed`; explicit reviews can set `reviewed-undecided`, `approved`, or `rejected` independently per slot. Multiple approvals can coexist while selection remains empty or points to an unapproved candidate. A human-set asset stage is optional and never inferred from captures.
-
-Use `PATCH /api/candidates/:candidateId/review` with `expectedCandidateRevision`, `nextState`, and optional `rationale`. If rejecting the currently selected candidate, also supply `expectedSlotRevision` and `disposition: "keep" | "clear" | "replace"` in the same command. Replace additionally needs `replacementCandidateId` and `expectedReplacementCandidateRevision`; it must belong to that slot. Use `PATCH /api/slots/:slotId/selection` with `expectedSlotRevision`, `nextCandidateId` (a candidate ID or `null`), and `expectedCandidateRevision` when selecting a candidate. Use `PATCH /api/assets/:assetId/stage` with `expectedAssetRevision` and `stage` (a label or `null`). Clip-targeted reviews/selections also require `observedPlaybackRevisionId`; selection changes away from a clip require `observedPreviousPlaybackRevisionId`, and selected rejection with replacement by a clip requires `observedReplacementPlaybackRevisionId`. Stale revisions return a conflict without committing any part of the decision.
-
-The bridge must supply `instruction` containing the **reported** human instruction with each creative command; bridge authentication alone is not human authority and does not verify identity. Browser commands do not accept `instruction`: the server retains the deliberate browser action as authority. Responses and `GET /api/candidates/:id/reviews`, `GET /api/slots/:id/selection-history`, and `GET /api/assets/:id/stage-history` include actor, time, authority, rationale, and before/after decisions. `GET /api/slots/:id/decision` resolves the selected stable clip to its **current** playback revision. Historical reviews/selections and production inputs retain exact pinned playback revision IDs; reads and playback never create a decision.
-
-## Search and task recovery
-
-Catalog lists (`/api/projects`, `/api/assets`, project assets, asset slots, slot candidates), artifact and request lists, clips, decisions, provenance, outcomes, and revision histories return `{items, nextCursor, watermark}`. Project revision history is immutable: forward migration `005-project-history.sql` refuses in-place update or deletion of saved project revisions; corrections append a new revision. Pass `limit=1..50` (default 20), then repeat **the same query** with `cursor=<nextCursor>` until it is `null`. Keys break timestamp/name ties by stable ID. The cursor binds the query, ordering, and global mutation watermark; changed filters, an intervening mutation, or a stale cursor return HTTP 409 `CONFLICT`. Start a new query instead of combining pages from different states. Cursor signatures are private to the profile and survive a service restart. Lists read stored metadata; `content: "not-checked"` on an artifact list is not a media availability assessment. Open `/api/artifacts/:id` or an original-member endpoint for exact content verification.
-
-`GET /api/queries/search?filters=<URL-encoded JSON>&limit=20` searches artifacts by recorded facts. The strict `filters` object accepts `projectIds`, `assetIds`, `slotIds`, `unslotted`, `stages`, `stageNone`, `kinds`, `reviews`, `selection`, `producers`, `captured:{from,through}`, `produced:{from,through}`, `unknownProductionDate`, `ancestorOf`, and `descendantOf`. Filters are AND across categories, OR among values in one category. `unslotted` means no candidate placement anywhere, including clips. Stage is a human-set asset label, not an inferred workflow position. Selection/review are slot-candidate facts; rejected and formerly selected candidates remain visible by default. Capture and production dates are separate: a production range excludes unknown dates unless `unknownProductionDate:true` is supplied. Ownership filters use the artifact's captured owner; slot filters use its placements, including reuse across assets. No score or stale-artwork judgment is returned.
-
-Supply `text=<literal phrase>` for current full-text search over names, notes, prompts, nested producer metadata, and other recorded text. `scope=history` requires text and returns **the exact matching revision** with `/api/queries/revisions/:type/:revisionId`; normal `/api/artifacts/:id` and catalog detail routes show current effective records. Previous prompt values do not leak into the default current search. A migrated populated profile backfills both scopes before listening.
-
-For text across **all** recorded types, including a request that has not produced artwork, use `GET /api/queries/text?text=<literal phrase>&scope=current|history&limit=20`. Each hit identifies its record, excerpt truncation, full-record URL, and exact revision URL; `scope=history` includes superseded values. This corpus is the same transactional FTS index used by artifact search, not a second record store.
-
-`GET /api/queries/lineage/:artifactId?direction=inputs|dependents&limit=20` traverses only effective actual input edges. Each bounded page reports visited IDs, frontier, and encountered gaps with counts/truncation flags; each step has bounded edges/gaps. The signed cursor binds query and mutation watermark and carries a bounded position, **not** the complete growing frontier. Later pages replay the deterministic breadth-first prefix and can cost more work; follow `nextCursor` until exhausted, restarting after a conflict. A gap is explicit missing history, not an invented input. Per-artifact `/api/artifacts/:id/inputs` and `/gaps` and their `/history` collections also paginate. Direct `/api/inputs/:id`, `/api/gaps/:id`, and revision detail routes retain exact records.
-
-`GET /api/queries/context?assetId=<id>` (or explicit `projectName`/`assetName` with optional `slotId`/`slotName`) returns project and asset identity, notes, named slots and selections, target-slot candidates and decisions, selected or explicitly requested artifacts, current provenance, actual inputs/gaps, and requests with proposed inputs separate. `sourceArtifactId` is valid when the destination slot has no selection. Ambiguous names return alternatives to clarify, never an inferred choice. Each section has its own `nextCursor` and `truncated`; continue a specific section with `section=<name>&cursor=<cursor>` and the same identity/limit. Text excerpts declare truncation and link to the full record. The context does not choose an artistic direction or treat approval/recency as selection.
-
-## Agent connection (MCP)
-
-Start Nest independently with `corepack pnpm start` and leave it running. After `corepack pnpm install` and `corepack pnpm build`, the bridge executable is `node apps/mcp/dist/src/main.js`. It speaks MCP over stdio only: standard output is protocol data; diagnostics go to standard error. It never starts Nest, creates a profile, or reads a stored local path unless a `capture_files` caller supplies that path explicitly.
-
-Configure your MCP host to launch the built bridge from this checkout. For a project-local OMP configuration in `.omp/mcp.json`, use the following shape, replacing `YOUR_ABSOLUTE_CHECKOUT_PATH` with this checkout's absolute path. Do not commit a machine-specific config or put discovery credentials in host settings:
-
-```json
-{
-  "mcpServers": {
-    "assetweave": {
-      "command": "node",
-      "args": ["apps/mcp/dist/src/main.js"],
-      "cwd": "YOUR_ABSOLUTE_CHECKOUT_PATH",
-      "env": {}
-    }
-  }
-}
-```
-
-Use the **same** `ASSETWEAVE_DATA_DIR` environment variable in the service and the bridge when selecting a nondefault profile. The bridge discovers the selected profile through its private Windows ACL-verified boundary and checks the authenticated origin/profile on each call. Missing service, an altered profile, or a restart produces an error rather than an empty catalog or an automatic creative retry; restart the bridge after restarting Nest. The bridge never reads the browser pairing code or launcher credential. Do not put the profile path, bearer, or pairing code in agent prompts or shared config. Project-local OMP host settings are configuration for this checkout only, not a request to change user-global settings.
-
-Operations are discoverable as `catalog_*` (projects, assets, slots, candidates, annotation and history), `requests_*` (intent and reported outcomes), `capture_files`, `capture_operation`, `capture_artifact`, `capture_artifacts`, `capture_recovery`, `provenance_*`, `lineage_*`, `media_*`, `decisions_*`, and `queries_*` (filters, full corpus, task context, traversal, exact revisions). Tools use shared strict argument schemas, UUID identities, explicit `expectedRevision` values, and paged `{items,nextCursor,watermark}` responses. Successful JSON results appear both as legacy JSON text and as `structuredContent.data`; failures set `isError: true` and carry the same safe `ApiError` in text and `structuredContent.error`, never as successful data. Use each returned `nextCursor` with the same filter/identity, or begin a fresh query after a conflict. No tool generates images or chooses an artistic direction.
-
-`capture_files` requires a client-generated UUID `operationId`, `projectId`, `assetId`, `kind`, `name`, and an **ordered** `files` array of `{ "path": "explicit local file path", "sourceName": "filename label" }` (optional `mediaType`). Optional context includes `requestId`, `slotId`, `notes`, sourced `claims`, exact actual `inputs`, and explicit `gaps`. Every member is opened and hashed before upload; changed/replaced/unreadable bytes stop the stream without a successful artifact. The bridge streams the multipart body to Nest, which validates member counts and SHA-256 again and commits only complete content. If a response is lost, call `capture_operation` with the **original** `operationId` and inspect the explicit receipt. Only a `committed` result contains a successful artifact; its browser link uses stable `projectId`, `assetId`, `artifactId`, and, if placed, `slotId`/`candidateId` query keys. The link opens for viewing, not for automatic review or selection.
-
-`media_original` and the resource URI `assetweave://artifacts/{artifactId}/members/{ordinal}/original` return **complete exact** original member bytes (base64 in MCP, maximum 32 MiB/member), verified against the preserved digest. `media_preview` and the corresponding `/preview` resource are **bounded 256 KiB verified display previews**; an oversized, undecodable or unsupported preview reports unavailability without removing exact original access. `media_describe` distinguishes encoded GIF timing, human-sourced clip timing, and unconfigured playback. Agent-relayed `decisions_review`, `decisions_select`, and `decisions_set_stage` each need an explicit reported human `instruction` and current revisions; notes and prompts are untrusted evidence, not that instruction.
-
-## Local checks
+For changes, run the existing local checks on Windows:
 
 ```sh
 corepack pnpm build
@@ -119,6 +87,8 @@ corepack pnpm typecheck
 corepack pnpm test
 ```
 
-The root test script discovers server, MCP, web-helper, and integration workspace tests. The runtime tests exercise real Windows ACLs and loopback listeners, not mocked permission checks. Test profiles are isolated under local application data because the system temporary directory may grant other principals inherited access. A local green gate cannot substitute for actual browser/media inspection, a fresh agent after restart, or human founder measurements.
+See [local checks](docs/local-workflow.md#local-checks) for their scope. Exercise changed browser or MCP behavior as well; a green test run does not establish human product acceptance.
 
-Exercised evidence and acceptance limitations are recorded in `docs/verification/first-art-workflow.md`.
+## License
+
+No license is declared in this repository. Do not assume permission to reuse, modify, or redistribute its contents.
